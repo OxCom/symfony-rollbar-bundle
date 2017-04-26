@@ -7,7 +7,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Monolog\Logger;
 use Monolog\Handler\RollbarHandler;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
+use SymfonyRollbarBundle\Payload\Generator;
 
 /**
  * Class AbstractListener
@@ -25,16 +28,23 @@ abstract class AbstractListener implements EventSubscriberInterface
      */
     protected $container;
 
+    /**
+     * @var \SymfonyRollbarBundle\Payload\Generator
+     */
+    protected $generator;
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger    = new Logger(SymfonyRollbarExtension::ALIAS);
         $this->container = $container;
-        $config          = $this->container->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
+        $config          = $this->getContainer()->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
 
-        Rollbar::init($config['rollbar']);
+        Rollbar::init($config['rollbar'], false, false, false);
         $handler = new RollbarHandler(Rollbar::$instance);
 
-        $this->logger->pushHandler($handler);
+        $this->getLogger()->pushHandler($handler);
+
+        $this->generator = new Generator($this->getContainer());
     }
 
     /**
@@ -45,4 +55,34 @@ abstract class AbstractListener implements EventSubscriberInterface
         return $this->logger;
     }
 
+    /**
+     * @inheritdoc
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::EXCEPTION => ['onKernelException', 1],
+        ];
+    }
+
+    /**
+     * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+     */
+    abstract public function onKernelException(GetResponseForExceptionEvent $event);
+
+    /**
+     * @return \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * @return \SymfonyRollbarBundle\Payload\Generator
+     */
+    public function getGenerator()
+    {
+        return $this->generator;
+    }
 }

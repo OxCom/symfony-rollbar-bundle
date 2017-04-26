@@ -28,7 +28,7 @@ class SymfonyRollbarExtension extends Extension
         $configuration = new Configuration();
         $config        = $this->processConfiguration($configuration, $configs);
 
-        if (!$config['enabled']) {
+        if (!$config['enable']) {
             return;
         }
 

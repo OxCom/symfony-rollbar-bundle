@@ -3,7 +3,6 @@
 namespace SymfonyRollbarBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 use SymfonyRollbarBundle\Payload\Generator;
 
 class ExceptionListener extends AbstractListener
@@ -19,24 +18,11 @@ class ExceptionListener extends AbstractListener
 
         if ($exception instanceof \Exception) {
             // generate payload and log data
-            $generator = new Generator($this->container);
-            $request = $event->getRequest();
-
-            list($message, $payload) = $generator->getPayload($exception, $request);
+            list($message, $payload) = $this->getGenerator()->getExceptionPayload($exception);
 
             $this->getLogger()->error($message, [
                 'payload' => $payload,
             ]);
         }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function getSubscribedEvents()
-    {
-        return [
-            KernelEvents::EXCEPTION => ['onKernelException', 1],
-        ];
     }
 }

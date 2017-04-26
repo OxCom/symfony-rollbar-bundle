@@ -20,18 +20,15 @@ class BundleTest extends KernelTestCase
         static::bootKernel();
     }
 
-    public function testBoot()
+    public function testException()
     {
-        $b = static::$kernel->getBundles();
         $container = static::$kernel->getContainer();
 
         /**
          * @var TraceableEventDispatcher $eventDispatcher
          */
         $eventDispatcher = $container->get('event_dispatcher');
-//        $listeners       = $eventDispatcher->getListeners();
-
-        $exception       = new \Exception('This is new report');
+        $exception       = new \Exception('This is new exception');
         $event           = new GetResponseForExceptionEvent(
             static::$kernel, new Request(),
             HttpKernelInterface::MASTER_REQUEST,
@@ -39,5 +36,17 @@ class BundleTest extends KernelTestCase
         );
 
         $eventDispatcher->dispatch('kernel.exception', $event);
+    }
+
+    public function testError()
+    {
+        trigger_error("Fatal error", E_USER_ERROR);
+//        $container = static::$kernel->getContainer();
+//
+//        /**
+//         * @var \SymfonyRollbarBundle\EventListener\ErrorListener $errorHandler
+//         */
+//        $errorHandler = $container->get('symfony_rollbar.event_listener.error_listener');
+//        $errorHandler->handleError(E_ERROR, 'This is new error', __FILE__, rand(10, 100));
     }
 }
