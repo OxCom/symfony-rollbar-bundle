@@ -90,7 +90,7 @@ class Generator
         /**
          * @var \Symfony\Component\HttpFoundation\Request $request
          */
-        $request = $this->container->get('request_stack')->getCurrentRequest();
+        $request = $this->getContainer()->get('request_stack')->getCurrentRequest();
         if (empty($request)) {
             $request = new Request();
         }
