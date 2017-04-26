@@ -35,9 +35,6 @@ abstract class AbstractListener implements EventSubscriberInterface
         Rollbar::init($config['rollbar']);
         $handler = new RollbarHandler(Rollbar::$instance);
 
-//        $formatter = new ExceptionFormatter();
-//        $handler->setFormatter($formatter);
-
         $this->logger->pushHandler($handler);
     }
 
