@@ -13,7 +13,7 @@
         "psr-4": { "SymfonyRollbarBundle\\": "src/" }
     },
     "autoload-dev": {
-        "psr-4": { "Tests\\": "Tests/"}
+        "psr-4": { "Tests\\": "tests/"}
     },
     "require": {
         "php": ">=5.6",

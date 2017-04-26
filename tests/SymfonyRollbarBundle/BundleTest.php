@@ -29,7 +29,8 @@ class BundleTest extends KernelTestCase
          * @var TraceableEventDispatcher $eventDispatcher
          */
         $eventDispatcher = $container->get('event_dispatcher');
-        $listeners       = $eventDispatcher->getListeners();
+//        $listeners       = $eventDispatcher->getListeners();
+
         $exception       = new \Exception('This is new report');
         $event           = new GetResponseForExceptionEvent(
             static::$kernel, new Request(),

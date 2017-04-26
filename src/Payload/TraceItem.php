@@ -1,11 +1,14 @@
 <?php
 
-namespace SymfonyRollbarBundle\Formatter;
-
-use Monolog\Formatter\FormatterInterface;
+namespace SymfonyRollbarBundle\Payload;
 
 class TraceItem
 {
+    /**
+     * @param \Exception $exception
+     *
+     * @return array
+     */
     public function __invoke(\Exception $exception)
     {
         $frames = [];
@@ -27,8 +30,7 @@ class TraceItem
             // build method
             $method          = empty($row['function']) ? null : $row['function'];
             $call            = empty($row['type']) ? '::' : $row['type'];
-            $args            = '(' . implode(', ', $frame['args']) . ')';
-            $frame['method'] = $frame['class_name'] . $call . $method . $args;
+            $frame['method'] = $frame['class_name'] . $call . $method . '()';
 
             $frames[] = $frame;
         }
@@ -37,8 +39,7 @@ class TraceItem
             'exception' => [
                 'class'   => get_class($exception),
                 'message' => implode(' ', [
-                    'Exception',
-                    "'" . get_class($exception) . "'",
+                    "'\\" . get_class($exception) . "'",
                     'with message',
                     "'" . $exception->getMessage() . "'",
                     'occurred in file',

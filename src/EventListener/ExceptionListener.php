@@ -4,9 +4,9 @@ namespace SymfonyRollbarBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use SymfonyRollbarBundle\Formatter\ExceptionFormatter;
+use SymfonyRollbarBundle\Payload\Generator;
 
-class ExceptionListener extends \SymfonyRollbarBundle\EventListener\AbstractListener
+class ExceptionListener extends AbstractListener
 {
     /**
      * Process exception
@@ -16,12 +16,18 @@ class ExceptionListener extends \SymfonyRollbarBundle\EventListener\AbstractList
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
-        $formatter = new ExceptionFormatter();
-        $payload   = $formatter->format($exception);
 
-        $this->getLogger()->error($payload['message'], [
-            'payload' => $payload['trace_chain'],
-        ]);
+        if ($exception instanceof \Exception) {
+            // generate payload and log data
+            $generator = new Generator($this->container);
+            $request = $event->getRequest();
+
+            list($message, $payload) = $generator->getPayload($exception, $request);
+
+            $this->getLogger()->error($message, [
+                'payload' => $payload,
+            ]);
+        }
     }
 
     /**

@@ -1,5 +1,8 @@
 .idea
 /vendor/
 
+/var/
+!/var/.gitkeep
+
 composer.lock
 composer.phar

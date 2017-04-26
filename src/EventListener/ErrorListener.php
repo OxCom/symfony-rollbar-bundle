@@ -4,7 +4,7 @@ namespace SymfonyRollbarBundle\EventListener;
 
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class Error extends \SymfonyRollbarBundle\EventListener\AbstractListener
+class ErrorListener extends AbstractListener
 {
     /**
      * @inheritdoc
@@ -12,7 +12,7 @@ class Error extends \SymfonyRollbarBundle\EventListener\AbstractListener
     public static function getSubscribedEvents()
     {
         return [
-//            KernelEvents::EXCEPTION => ['onKernelException', 1],
+            KernelEvents::EXCEPTION => ['onKernelException', 1],
         ];
     }
 }

@@ -1,10 +1,12 @@
 <?php
 
-namespace SymfonyRollbarBundle\Formatter;
+namespace SymfonyRollbarBundle\Payload;
 
 class TraceChain
 {
     /**
+     * @param \Exception $exception
+     *
      * @return array
      */
     public function __invoke(\Exception $exception)
