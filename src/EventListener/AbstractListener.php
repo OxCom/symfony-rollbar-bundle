@@ -8,7 +8,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Monolog\Logger;
 use Monolog\Handler\RollbarHandler;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
-use SymfonyRollbarBundle\Formatter\Generator;
 
 /**
  * Class AbstractListener

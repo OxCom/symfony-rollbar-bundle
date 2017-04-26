@@ -28,10 +28,15 @@ class SymfonyRollbarExtension extends Extension
         $configuration = new Configuration();
         $config        = $this->processConfiguration($configuration, $configs);
 
-        // load services
+        if (!$config['enabled']) {
+            return;
+        }
+
+        // load services and register listeners
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
+        // store parameters for external use
         $container->setParameter(static::ALIAS . '.config', $config);
     }
 

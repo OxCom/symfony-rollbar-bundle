@@ -11,8 +11,16 @@ class ErrorListener extends AbstractListener
      */
     public static function getSubscribedEvents()
     {
-        return [
-            KernelEvents::EXCEPTION => ['onKernelException', 1],
-        ];
+        // here only errors, so we have to setup handler here
+        $h = set_error_handler([$this, 'handleError']);
+
+        var_dump($h);die;
+
+        return [];
+    }
+
+    public function handleError($errno, $errstr, $errfile, $errline)
+    {
+        return false;
     }
 }
