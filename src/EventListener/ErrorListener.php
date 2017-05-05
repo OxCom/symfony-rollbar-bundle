@@ -4,6 +4,7 @@ namespace SymfonyRollbarBundle\EventListener;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
 
 class ErrorListener extends AbstractListener
 {
@@ -72,8 +73,13 @@ class ErrorListener extends AbstractListener
     protected function isReportable($code)
     {
         $code = (int)$code;
+        $config = $this->getContainer()->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
 
-        return error_reporting() & $code !== 0;
+        return true
+            && $config['enable']
+            && !(error_reporting() === 0 && $config['rollbar']['report_suppressed'])
+            && !(($config['rollbar']['use_error_reporting'] && (error_reporting() & $code) === 0))
+            && !($config['rollbar']['included_errno'] != -1 && ($code & $config['rollbar']['included_errno']) != $code);
     }
 
     /**

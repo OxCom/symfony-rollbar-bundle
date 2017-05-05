@@ -2,11 +2,9 @@
 
 namespace SymfonyRollbarBundle\EventListener;
 
-use Rollbar;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Monolog\Logger;
-use Monolog\Handler\RollbarHandler;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
@@ -35,16 +33,17 @@ abstract class AbstractListener implements EventSubscriberInterface
 
     public function __construct(ContainerInterface $container)
     {
+        /**
+         * @var \SymfonyRollbarBundle\Provider\RollbarHandler $rbProvider
+         */
         $this->logger    = new Logger(SymfonyRollbarExtension::ALIAS);
         $this->container = $container;
-        $config          = $this->getContainer()->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
+        $this->generator = $this->getContainer()->get('symfony_rollbar.payload.generator');
+        $rbProvider      = $this->getContainer()->get('symfony_rollbar.provider.rollbar_handler');
+        $rbHandler       = $rbProvider->getHandler();
 
-        Rollbar::init($config['rollbar'], false, false, false);
-        $handler = new RollbarHandler(Rollbar::$instance);
+        $this->getLogger()->pushHandler($rbHandler);
 
-        $this->getLogger()->pushHandler($handler);
-
-        $this->generator = new Generator($this->getContainer());
     }
 
     /**

@@ -23,6 +23,7 @@ class BundleTest extends KernelTestCase
     public function testListeners()
     {
         $container = static::$kernel->getContainer();
+
         /**
          * @var TraceableEventDispatcher $eventDispatcher
          */

@@ -20,7 +20,7 @@ class Configuration implements ConfigurationInterface
     const ENVIRONMENT = 'production';
     const TIMEOUT     = 3;
 
-    static $scrubFieldsDefault = [
+    public static $scrubFieldsDefault = [
         'passwd',
         'password',
         'secret',

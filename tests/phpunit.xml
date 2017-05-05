@@ -24,11 +24,11 @@
             <directory>./../src</directory>
         </whitelist>
     </filter>
-    <!--<logging>-->
-        <!--<log type="coverage-html"-->
-             <!--target="../coverage"-->
-             <!--lowUpperBound="35"-->
-             <!--highLowerBound="70" />-->
-        <!--<log type="coverage-clover" target="../clover.xml" />-->
-    <!--</logging>-->
+    <logging>
+        <log type="coverage-html"
+             target="../coverage"
+             lowUpperBound="35"
+             highLowerBound="70" />
+        <log type="coverage-clover" target="../clover.xml" />
+    </logging>
 </phpunit>
