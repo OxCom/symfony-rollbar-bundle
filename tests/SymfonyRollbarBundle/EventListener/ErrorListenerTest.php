@@ -59,6 +59,7 @@ class ErrorListenerTest extends KernelTestCase
     }
 
     /**
+     * @covers \SymfonyRollbarBundle\EventListener\ErrorListener
      * @runInSeparateProcess
      */
     public function testFatalError()
@@ -95,7 +96,7 @@ class ErrorListenerTest extends KernelTestCase
             /**
              * @var AbstractListener $listener
              */
-            if (!$listener[0] instanceof ErrorListener) {
+            if (!$listener[0] instanceof AbstractListener) {
                 continue;
             }
 
@@ -103,6 +104,11 @@ class ErrorListenerTest extends KernelTestCase
         }
 
         // @ will allow to skip fatal error inside application, but we can get error with error_get_last()
+        if (version_compare(PHP_VERSION, '7.0.0')  >= 0) {
+            $this->expectException('Error');
+            $this->expectExceptionMessage('Call to undefined function this_is_fatal_error()');
+        }
+
         @include __DIR__ . '/../../Fixtures/fatal.php';
     }
 }

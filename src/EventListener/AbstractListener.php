@@ -43,7 +43,6 @@ abstract class AbstractListener implements EventSubscriberInterface
         $rbHandler       = $rbProvider->getHandler();
 
         $this->getLogger()->pushHandler($rbHandler);
-
     }
 
     /**
