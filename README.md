@@ -1,4 +1,5 @@
 # SymfonyRollbar bundle for Symfony Framework 3
+[![Build Status](https://travis-ci.org/OxCom/symfony3-rollbar-bundle.svg?branch=master)](https://travis-ci.org/OxCom/symfony3-rollbar-bundle)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
 Bundle for Symfony3 that integrates Rollbar tracker
