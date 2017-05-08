@@ -3,6 +3,10 @@ namespace Tests\SymfonyRollbarBundle\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
+use SymfonyRollbarBundle\EventListener\ErrorListener;
+use SymfonyRollbarBundle\EventListener\ExceptionListener;
+use SymfonyRollbarBundle\Payload\Generator;
+use SymfonyRollbarBundle\Provider\RollbarHandler;
 
 /**
  * Class SymfonyRollbarExtensionTest
@@ -16,16 +20,16 @@ class SymfonyRollbarExtensionTest extends AbstractExtensionTestCase
      */
     protected function getContainerExtensions()
     {
-        return array(
-            new SymfonyRollbarExtension()
-        );
+        return [
+            new SymfonyRollbarExtension(),
+        ];
     }
 
     /**
      * @dataProvider generatorConfigVars
      *
      * @param string $var
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function testConfigEnabledVars($var, $value)
     {
@@ -37,10 +41,10 @@ class SymfonyRollbarExtensionTest extends AbstractExtensionTestCase
     public function generatorConfigVars()
     {
         return [
-            ['symfony_rollbar.event_listener.exception_listener.class', \SymfonyRollbarBundle\EventListener\ExceptionListener::class],
-            ['symfony_rollbar.event_listener.error_listener.class', \SymfonyRollbarBundle\EventListener\ErrorListener::class],
-            ['symfony_rollbar.provider.rollbar_handler.class', \SymfonyRollbarBundle\Provider\RollbarHandler::class],
-            ['symfony_rollbar.payload.generator.class', \SymfonyRollbarBundle\Payload\Generator::class],
+            ['symfony_rollbar.event_listener.exception_listener.class', ExceptionListener::class],
+            ['symfony_rollbar.event_listener.error_listener.class', ErrorListener::class],
+            ['symfony_rollbar.provider.rollbar_handler.class', RollbarHandler::class],
+            ['symfony_rollbar.payload.generator.class', Generator::class],
             ['symfony_rollbar.config', ['enable' => true]],
         ];
     }
@@ -51,7 +55,7 @@ class SymfonyRollbarExtensionTest extends AbstractExtensionTestCase
      * @expectedException \PHPUnit_Framework_ExpectationFailedException
      *
      * @param string $var
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function testConfigDisabledVars($var, $value)
     {

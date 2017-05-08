@@ -46,7 +46,10 @@ class ErrorHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $closure = empty($this->assert) ? function() {} : $this->assert;
+        $dummy = function () {
+        };
+
+        $closure = empty($this->assert) ? $dummy : $this->assert;
         call_user_func($closure, $record);
     }
 }

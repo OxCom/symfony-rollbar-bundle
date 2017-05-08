@@ -30,7 +30,8 @@ class ExceptionListenerTest extends KernelTestCase
         $eventDispatcher = $container->get('event_dispatcher');
         $exception       = new \Exception('This is new exception');
         $event           = new GetResponseForExceptionEvent(
-            static::$kernel, new Request(),
+            static::$kernel,
+            new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             $exception
         );
