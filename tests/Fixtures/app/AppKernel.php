@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests\Fixtures\App;
-
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
