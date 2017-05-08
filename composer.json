@@ -32,7 +32,7 @@
     "scripts": {
         "test": [
             "composer install",
-            "./vendor/bin/phpcs --standard=psr2 src/ tests/",
+            "./vendor/bin/phpcs --standard=psr2 src/ tests/SymfonyRollbarBundle",
             "./vendor/bin/phpunit -c tests/"
         ]
     }
