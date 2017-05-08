@@ -4,6 +4,10 @@ namespace Tests\SymfonyRollbarBundle\DependencyInjection;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
 
+/**
+ * Class SymfonyRollbarExtensionTest
+ * @package Tests\SymfonyRollbarBundle\DependencyInjection
+ */
 class SymfonyRollbarExtensionTest extends AbstractExtensionTestCase
 {
     /**
@@ -54,5 +58,11 @@ class SymfonyRollbarExtensionTest extends AbstractExtensionTestCase
         $this->load(['enable' => false]);
 
         $this->assertContainerBuilderHasParameter($var, $value);
+    }
+
+    public function testAlias()
+    {
+        $extension = new SymfonyRollbarExtension();
+        $this->assertEquals(SymfonyRollbarExtension::ALIAS, $extension->getAlias());
     }
 }

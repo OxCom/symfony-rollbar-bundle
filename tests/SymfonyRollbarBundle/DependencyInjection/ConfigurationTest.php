@@ -7,8 +7,8 @@ use SymfonyRollbarBundle\DependencyInjection\Configuration;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
 
 /**
- * Class BundleTest
- * @package Tests\SymfonyRollbarBundle
+ * Class ConfigurationTest
+ * @package Tests\SymfonyRollbarBundle\DependencyInjection
  */
 class ConfigurationTest extends KernelTestCase
 {

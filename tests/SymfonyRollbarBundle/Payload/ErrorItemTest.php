@@ -2,35 +2,53 @@
 namespace Tests\SymfonyRollbarBundle\Payload;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
-use SymfonyRollbarBundle\Payload\TraceItem;
+use SymfonyRollbarBundle\Payload\ErrorItem;
 
 /**
  * Class ErrorItemTest
- * @package Tests\SymfonyRollbarBundle
+ * @package Tests\SymfonyRollbarBundle\Payload
  */
 class ErrorItemTest extends KernelTestCase
 {
-    public function testInvoke()
+    /**
+     * @dataProvider generateInvoke
+     *
+     * @param int $code
+     * @param string $message
+     * @param string $file
+     * @param int $line
+     * @param string $mapped
+     */
+    public function testInvoke($code, $message, $file, $line, $mapped)
     {
-        $msg = 'Text exception - ' . md5(microtime());
-        $ex  = new \Exception($msg, 7);
-
-        $item = new TraceItem();
-        $data = $item($ex);
+        $item = new ErrorItem();
+        $data = $item($code, $message, $file, $line);
 
         $this->assertNotEmpty($data['exception']);
         $this->assertNotEmpty($data['frames']);
 
         $exception = $data['exception'];
-        $this->assertEquals(get_class($ex), $exception['class']);
-        $this->assertContains($msg, $exception['message']);
+        $this->assertEquals($mapped, $exception['class']);
+        $this->assertContains($message, $exception['message']);
 
-        $this->assertGreaterThan(1, count($data['frames']));
+        $this->assertEquals(1, count($data['frames']));
 
         $frame = $data['frames'][0];
-        $this->assertTrue(array_key_exists('filename', $frame));
-        $this->assertTrue(array_key_exists('lineno', $frame));
-        $this->assertTrue(array_key_exists('class_name', $frame));
+        $this->assertEquals($file, $frame['filename']);
+        $this->assertEquals($line, $frame['lineno']);
+    }
+
+    /**
+     * @return array
+     */
+    public function generateInvoke()
+    {
+        return [
+            [E_ERROR, 'Error message - ' . microtime(true), __FILE__, rand(1, 100), 'E_ERROR'],
+            [E_WARNING, 'Error message - ' . microtime(true), __FILE__, rand(1, 100), 'E_WARNING'],
+            [E_PARSE, 'Error message - ' . microtime(true), __FILE__, rand(1, 100), 'E_PARSE'],
+            [E_NOTICE, 'Error message - ' . microtime(true), __FILE__, rand(1, 100), 'E_NOTICE'],
+            [E_CORE_ERROR, 'Error message - ' . microtime(true), __FILE__, rand(1, 100), 'E_CORE_ERROR'],
+        ];
     }
 }

@@ -76,5 +76,4 @@ class ErrorItem
 
         return !empty(static::$map[$code]) ? static::$map[$code] : 'E_UNDEFINED';
     }
-
 }

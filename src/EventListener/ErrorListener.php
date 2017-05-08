@@ -50,17 +50,30 @@ class ErrorListener extends AbstractListener
      */
     public function handleFatalError()
     {
-        $error = error_get_last();
+        $error = $this->getLastError();
         if (empty($error)) {
             return;
         }
 
+        // due to PHP docs we allways will have such structure for errors
         $code    = $error['type'];
         $message = $error['message'];
         $file    = $error['file'];
         $line    = $error['line'];
 
         $this->handleError($code, $message, $file, $line);
+    }
+
+    /**
+     * Wrap php error_get_last() to get more testable code
+     * @link: http://php.net/manual/en/function.error-get-last.php
+     *
+     * @return array|null
+     * @codeCoverageIgnore
+     */
+    protected function getLastError()
+    {
+        return error_get_last();
     }
 
     /**
