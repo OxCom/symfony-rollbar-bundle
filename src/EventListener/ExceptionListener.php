@@ -40,7 +40,7 @@ class ExceptionListener extends AbstractListener
      *
      * @param $exception
      */
-    protected function handleException($exception)
+    public function handleException($exception)
     {
         // generate payload and log data
         list($message, $payload) = $this->getGenerator()->getExceptionPayload($exception);
