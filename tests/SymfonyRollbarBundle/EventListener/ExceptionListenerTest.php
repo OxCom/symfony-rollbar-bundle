@@ -1,11 +1,13 @@
 <?php
 namespace Tests\SymfonyRollbarBundle\EventListener;
 
+use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
 use \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use SymfonyRollbarBundle\EventListener\AbstractListener;
 
 /**
  * Class ExceptionListenerTest

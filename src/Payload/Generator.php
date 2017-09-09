@@ -30,29 +30,52 @@ class Generator
      *
      * @return array
      */
-    public function getExceptionPayload(\Exception $exception)
+    public function getExceptionPayload($exception)
     {
-        // handle exception
-        $chain = new TraceChain();
-        $item  = new TraceItem();
-
-        $data    = $item($exception);
-        $message = $data['exception']['message'];
-
         /**
          * Build payload
          * @link https://rollbar.com/docs/api/items_post/
          */
         $payload = [
-            'body'             => ['trace_chain' => $chain($exception)],
+            'body'             => [],
+            'framework'        => \Symfony\Component\HttpKernel\Kernel::VERSION,
+            'server'           => $this->getServerInfo(),
+            'language_version' => phpversion(),
             'request'          => $this->getRequestInfo(),
             'environment'      => $this->getKernel()->getEnvironment(),
-            'framework'        => \Symfony\Component\HttpKernel\Kernel::VERSION,
-            'language_version' => phpversion(),
-            'server'           => $this->getServerInfo(),
         ];
 
+        // @link http://php.net/manual/en/reserved.constants.php
+        // @link http://php.net/manual/en/language.errors.php7.php
+        if (!($exception instanceof \Exception) || PHP_MAJOR_VERSION > 7 && !($exception instanceof \Throwable)) {
+            $payload['body'] = $this->buildGeneratorError($exception, __FILE__, __LINE__);
+
+            return ['Undefined error', $payload];
+        }
+
+        // handle exception
+        $chain = new TraceChain();
+        $item  = new TraceItem();
+
+        $data            = $item($exception);
+        $message         = $data['exception']['message'];
+        $payload['body'] = ['trace_chain' => $chain($exception)];
+
         return [$message, $payload];
+    }
+
+    /**
+     * @param $object
+     * @param $file
+     * @param $line
+     *
+     * @return array
+     */
+    protected function buildGeneratorError($object, $file, $line)
+    {
+        $item = new ErrorItem();
+
+        return ['trace' => $item(0, serialize($object), $file, $line)];
     }
 
     /**

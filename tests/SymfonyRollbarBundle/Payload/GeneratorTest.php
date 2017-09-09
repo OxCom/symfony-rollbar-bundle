@@ -28,9 +28,9 @@ class GeneratorTest extends KernelTestCase
         $container = static::$kernel->getContainer();
         $generator = $container->get('symfony_rollbar.payload.generator');
 
-        $ctnr = $generator->getContainer();
+        $result = $generator->getContainer();
 
-        $this->assertEquals($container, $ctnr);
+        $this->assertEquals($container, $result);
     }
 
     public function testGetKernel()
@@ -197,5 +197,39 @@ class GeneratorTest extends KernelTestCase
         $this->assertEquals(\Symfony\Component\HttpKernel\Kernel::VERSION, $payload['framework']);
         $this->assertEquals(phpversion(), $payload['language_version']);
         $this->assertEquals($serverInfo, $payload['server']);
+    }
+
+    /**
+     * @dataProvider generatorStrangeData
+     * @param mixed $data
+     */
+    public function testStrangeException($data)
+    {
+        /**
+         * @var \SymfonyRollbarBundle\Payload\Generator $generator
+         */
+        $container = static::$kernel->getContainer();
+        $generator = $container->get('symfony_rollbar.payload.generator');
+
+        list($message, $payload) = $generator->getExceptionPayload($data);
+
+        $this->assertEquals('Undefined error', $message);
+        $this->assertNotEmpty($payload['body']['trace']);
+    }
+
+    /**
+     * @return array
+     */
+    public function generatorStrangeData()
+    {
+        return [
+            ['zxcv'],
+            [1234],
+            [0.2345],
+            [null],
+            [(object)['p' => 'a']],
+            [['s' => 'app', 'd' => 'web']],
+            [new ErrorItem()],
+        ];
     }
 }
