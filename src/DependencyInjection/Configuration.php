@@ -14,8 +14,12 @@ class Configuration implements ConfigurationInterface
 {
     const HANDLER_BLOCKING = 'blocking';
     const HANDLER_AGENT    = 'agent';
+    const HANDLER_FLUENT   = 'fluent';
 
-    const BATCH_SIZE  = 50;
+    const FLUENT_HOST = '127.0.0.1';
+    const FLUENT_PORT = 24224;
+    const FLUENT_TAG = 'rollbar';
+
     const BRANCH      = 'master';
     const ENVIRONMENT = 'production';
     const TIMEOUT     = 3;
@@ -45,18 +49,23 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('rollbar')->children()
                     ->scalarNode('access_token')->defaultValue('')->end()
                     ->scalarNode('agent_log_location')->defaultValue('%kernel.logs_dir%/rollbar.log')->end()
+                    ->scalarNode('allow_exec')->defaultTrue()->end()
+                    ->scalarNode('endpoint')->defaultValue('https://api.rollbar.com/api/1/')->end()
                     ->scalarNode('base_api_url')->defaultValue('https://api.rollbar.com/api/1/')->end()
-                    ->scalarNode('batch_size')->defaultValue(static::BATCH_SIZE)->end()
-                    ->scalarNode('batched')->defaultTrue()->end()
                     ->scalarNode('branch')->defaultValue(static::BRANCH)->end()
                     ->scalarNode('capture_error_stacktraces')->defaultTrue()->end()
                     ->scalarNode('checkIgnore')->defaultNull()->end()
                     ->scalarNode('code_version')->defaultValue('')->end()
                     ->scalarNode('enable_utf8_sanitization')->defaultTrue()->end()
                     ->scalarNode('environment')->defaultValue(static::ENVIRONMENT)->end()
+                    ->scalarNode('custom')->defaultValue([])->end()
                     ->scalarNode('error_sample_rates')->defaultValue([])->end()
+                    ->scalarNode('exception_sample_rates')->defaultValue([])->end()
+                    ->scalarNode('fluent_host')->defaultValue(static::FLUENT_HOST)->end()
+                    ->scalarNode('fluent_port')->defaultValue(static::FLUENT_PORT)->end()
+                    ->scalarNode('fluent_tag')->defaultValue(static::FLUENT_TAG)->end()
                     ->scalarNode('handler')->defaultValue(static::HANDLER_BLOCKING)->end()
-                    ->scalarNode('blocking')->defaultNull()->end()
+                    ->scalarNode('host')->defaultNull()->end()
                     ->scalarNode('include_error_code_context')->defaultFalse()->end()
                     ->scalarNode('include_exception_code_context')->defaultFalse()->end()
                     ->scalarNode('included_errno')->defaultValue($defaultErrorMask)->end()
@@ -65,11 +74,15 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('person_fn')->defaultNull()->end()
                     ->scalarNode('root')->defaultValue('%kernel.root_dir%')->end()
                     ->scalarNode('scrub_fields')->defaultValue(static::$scrubFieldsDefault)->end()
+                    ->scalarNode('scrub_whitelist')->defaultNull()->end()
                     ->scalarNode('shift_function')->defaultTrue()->end()
                     ->scalarNode('timeout')->defaultValue(static::TIMEOUT)->end()
                     ->scalarNode('report_suppressed')->defaultFalse()->end()
                     ->scalarNode('use_error_reporting')->defaultFalse()->end()
                     ->scalarNode('proxy')->defaultNull()->end()
+                    ->scalarNode('send_message_trace')->defaultFalse()->end()
+                    ->scalarNode('include_raw_request_body')->defaultFalse()->end()
+                    ->scalarNode('local_vars_dump')->defaultFalse()->end()
                 ->end()
             ->end();
 

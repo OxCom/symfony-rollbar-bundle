@@ -6,7 +6,7 @@
 Bundle for Symfony3 that integrates Rollbar tracker
 
 # Work in progress
-Current realization is used in one my projects, so You can expect a big list of updates, features and very small time for fixes and features.
+Current realization is used in one of my projects, so You can expect a big list of updates, features and very small time for fixes and features.
 
 # Install
 1. Add SymfonyRollbarBundle with composer: ``` composer require oxcom/symfony-rollbar-bundle```
@@ -26,13 +26,15 @@ Current realization is used in one my projects, so You can expect a big list of 
     }
 ```
 
+# Test
+To run test You have to provide an access token and then run test
+```bash
+$ export ROLLBAR_ACCESS_TOKEN="token here"
+$ ./vendor/bin/phpunit -c tests/
+```
+
 # Bugs and Issues
 Please, if You found a bug or something, that is not working properly, contact me and tell what's wrong. It's nice to have an example how to reproduce a bug, or any idea how to fix it in Your request. I'll take care about it ASAP.
-
-# TODO
-1. More tests
-2. More configuration params
-3. More support for PHP7
 
 # Thanks
 I would like to thanks all people how are lazy.

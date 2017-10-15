@@ -2,6 +2,7 @@
 
 namespace SymfonyRollbarBundle\EventListener;
 
+use Rollbar\ErrorWrapper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
@@ -38,10 +39,13 @@ class ErrorListener extends AbstractListener
             return;
         }
 
-        list($message, $payload) = $this->getGenerator()->getErrorPayload($code, $message, $file, $line);
+        $utilities = new \Rollbar\Utilities();
+        $backTrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        $wrapper   = new ErrorWrapper($code, $message, $file, $line, $backTrace, $utilities);
 
         $this->getLogger()->error($message, [
-            'payload' => $payload,
+            'level'     => \Monolog\Logger::CRITICAL,
+            'exception' => $wrapper,
         ]);
     }
 

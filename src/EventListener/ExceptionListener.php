@@ -42,11 +42,18 @@ class ExceptionListener extends AbstractListener
      */
     public function handleException($exception)
     {
-        // generate payload and log data
-        list($message, $payload) = $this->getGenerator()->getExceptionPayload($exception);
+        $payload = [];
+        // @link http://php.net/manual/en/reserved.constants.php
+        // @link http://php.net/manual/en/language.errors.php7.php
+        if (!($exception instanceof \Exception) || PHP_MAJOR_VERSION > 7 && !($exception instanceof \Throwable)) {
+            $payload   = ['message' => @serialize($exception)];
+            $exception = new \Exception('Undefined exception');
+        }
 
-        $this->getLogger()->error($message, [
-            'payload' => $payload,
+        $this->getLogger()->error($exception->getMessage(), [
+            'level'     => \Monolog\Logger::ERROR,
+            'exception' => $exception,
+            'payload'   => $payload,
         ]);
     }
 }

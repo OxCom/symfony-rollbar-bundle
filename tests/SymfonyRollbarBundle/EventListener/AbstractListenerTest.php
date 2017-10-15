@@ -90,39 +90,4 @@ class AbstractListenerTest extends KernelTestCase
         $logger = $listener->getLogger();
         $this->assertTrue($logger instanceof \Monolog\Logger);
     }
-
-    /**
-     * @dataProvider generatorGetSubscribedEvents
-     *
-     * @param string $class
-     */
-    public function testGetContainer($class)
-    {
-        /**
-         * @var AbstractListener $listener
-         */
-        $container1 = static::$kernel->getContainer();
-        $listener   = new $class($container1);
-
-        $container2 = $listener->getContainer();
-        $this->assertTrue($container2 instanceof \Symfony\Component\DependencyInjection\ContainerInterface);
-        $this->assertEquals($container1, $container2);
-    }
-
-    /**
-     * @dataProvider generatorGetSubscribedEvents
-     *
-     * @param string $class
-     */
-    public function testGetGenerator($class)
-    {
-        /**
-         * @var AbstractListener $listener
-         */
-        $container = static::$kernel->getContainer();
-        $listener  = new $class($container);
-
-        $generator = $listener->getGenerator();
-        $this->assertTrue($generator instanceof \SymfonyRollbarBundle\Payload\Generator);
-    }
 }

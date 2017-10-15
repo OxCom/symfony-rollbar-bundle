@@ -2,6 +2,7 @@
 namespace Tests\SymfonyRollbarBundle\EventListener;
 
 use Monolog\Logger;
+use Rollbar\ErrorWrapper;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
 use SymfonyRollbarBundle\EventListener\AbstractListener;
@@ -37,11 +38,10 @@ class ErrorListenerTest extends KernelTestCase
 
             $this->assertEquals($message, $record['message']);
             $this->assertEquals(Logger::ERROR, $record['level']);
-            $this->assertTrue(!empty($record['context']['payload']['body']['trace']['exception']['class']));
+            $this->assertNotEmpty($record['context']['exception']);
 
-            $trace = $record['context']['payload']['body']['trace'];
-            $this->assertEquals('E_USER_ERROR', $trace['exception']['class']);
-            $this->assertNotEmpty($trace['frames']);
+            $exception = $record['context']['exception'];
+            $this->assertInstanceOf(ErrorWrapper::class, $exception);
         });
 
         foreach ($listeners as $listener) {
@@ -79,11 +79,10 @@ class ErrorListenerTest extends KernelTestCase
 
                 $this->assertEquals('Call to undefined function this_is_fatal_error()', $record['message'], '');
                 $this->assertEquals(Logger::ERROR, $record['level']);
-                $this->assertTrue(!empty($record['context']['payload']['body']['trace']['exception']['class']));
+                $this->assertNotEmpty($record['context']['exception']);
 
-                $trace = $record['context']['payload']['body']['trace'];
-                $this->assertEquals('E_ERROR', $trace['exception']['class']);
-                $this->assertNotEmpty($trace['frames']);
+                $exception = $record['context']['exception'];
+                $this->assertInstanceOf(ErrorWrapper::class, $exception);
             } catch (\Exception $e) {
                 echo implode("\n", [
                     $e->getMessage(),
@@ -160,9 +159,6 @@ class ErrorListenerTest extends KernelTestCase
      */
     public function testIsReportable($called)
     {
-        $container = static::$kernel->getContainer();
-        $generator = $container->get('symfony_rollbar.payload.generator');
-
         $logger = $this->getMockBuilder(\Monolog\Logger::class)
                        ->setMethods(['error'])
                        ->setConstructorArgs(['test-alias'])
@@ -171,17 +167,13 @@ class ErrorListenerTest extends KernelTestCase
         $logger->method('error')
                ->willReturn(true);
 
-        $mock   = $this->getMockBuilder(ErrorListener::class)
-                       ->setMethods(['isReportable', 'getGenerator', 'getLogger'])
+        $mock = $this->getMockBuilder(ErrorListener::class)
+                       ->setMethods(['isReportable', 'getLogger'])
                        ->disableOriginalConstructor()
                        ->getMock();
 
         $mock->method('isReportable')
              ->willReturn($called);
-
-        $mock->expects($called ? $this->once() : $this->never())
-             ->method('getGenerator')
-             ->willReturn($generator);
 
         $mock->expects($called ? $this->once() : $this->never())
              ->method('getLogger')

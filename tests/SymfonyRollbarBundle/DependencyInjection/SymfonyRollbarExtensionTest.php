@@ -44,7 +44,6 @@ class SymfonyRollbarExtensionTest extends AbstractExtensionTestCase
             ['symfony_rollbar.event_listener.exception_listener.class', ExceptionListener::class],
             ['symfony_rollbar.event_listener.error_listener.class', ErrorListener::class],
             ['symfony_rollbar.provider.rollbar_handler.class', RollbarHandler::class],
-            ['symfony_rollbar.payload.generator.class', Generator::class],
             ['symfony_rollbar.config', ['enable' => true]],
         ];
     }

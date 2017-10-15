@@ -19,12 +19,42 @@ class RollbarHandlerTest extends KernelTestCase
     public function testRollbarHandler()
     {
         $container = static::$kernel->getContainer();
-        $provider  = new \SymfonyRollbarBundle\Provider\RollbarHandler($container);
+        $handler  = new \SymfonyRollbarBundle\Provider\RollbarHandler($container);
 
-        $cntr = $provider->getContainer();
-        $this->assertEquals($container, $cntr);
+        $hContainer = $handler->getContainer();
+        $this->assertEquals($container, $hContainer);
+        $this->assertInstanceOf(\Monolog\Handler\AbstractProcessingHandler::class, $handler);
+    }
 
-        $handler = $provider->getHandler();
-        $this->assertInstanceOf(\Monolog\Handler\RollbarHandler::class, $handler);
+    /**
+     * @dataProvider recordGenerator
+     * @param $record
+     */
+    public function testWrite($record)
+    {
+        $this->markTestIncomplete('TODO: write body');
+    }
+
+    public function recordGenerator()
+    {
+        return [
+            [
+                [
+                    'context' => [
+                        'level' => \Monolog\Logger::ERROR,
+                        'exception' => new \Exception('RecordGenerator :: #1'),
+                        'message' => 'RecordGenerator :: #1',
+                    ]
+                ]
+            ],
+            [
+                [
+                    'context' => [
+                        'level' => \Monolog\Logger::ERROR,
+                        'message' => 'RecordGenerator :: #2',
+                    ]
+                ]
+            ],
+        ];
     }
 }
