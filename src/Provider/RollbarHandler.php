@@ -25,7 +25,7 @@ class RollbarHandler extends AbstractProcessingHandler
      * Records whether any log records have been added since the last flush of the rollbar notifier
      * @var bool
      */
-    private $hasRecords = false;
+    protected $hasRecords = false;
 
     /**
      * Monolog vs Rollbar
@@ -61,7 +61,7 @@ class RollbarHandler extends AbstractProcessingHandler
         $rConfig  = $config['rollbar'];
         $override = [
             'root'      => $kernel->getRootDir(),
-            'framework' => \Symfony\Component\HttpKernel\Kernel::VERSION,
+            'framework' => 'Symfony ' . \Symfony\Component\HttpKernel\Kernel::VERSION,
         ];
 
         foreach ($override as $key => $value) {
