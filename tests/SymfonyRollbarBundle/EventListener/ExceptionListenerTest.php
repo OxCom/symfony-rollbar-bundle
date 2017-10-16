@@ -61,7 +61,7 @@ class ExceptionListenerTest extends KernelTestCase
         $container = static::$kernel->getContainer();
 
         $handler = new ErrorHandler();
-        $handler->setAssert(function($record) {
+        $handler->setAssert(function ($record) {
             $this->assertNotEmpty($record);
 
             $this->assertEquals('Undefined exception', $record['message']);
