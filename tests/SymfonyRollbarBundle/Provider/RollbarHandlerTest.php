@@ -1,10 +1,14 @@
 <?php
+
 namespace Tests\SymfonyRollbarBundle\Provider;
 
+use Rollbar\Payload\Level;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class RollbarHandlerTest
+ *
  * @package Tests\SymfonyRollbarBundle\Provider
  */
 class RollbarHandlerTest extends KernelTestCase
@@ -19,7 +23,7 @@ class RollbarHandlerTest extends KernelTestCase
     public function testRollbarHandler()
     {
         $container = static::$kernel->getContainer();
-        $handler  = new \SymfonyRollbarBundle\Provider\RollbarHandler($container);
+        $handler   = new \SymfonyRollbarBundle\Provider\RollbarHandler($container);
 
         $hContainer = $handler->getContainer();
         $this->assertEquals($container, $hContainer);
@@ -28,33 +32,78 @@ class RollbarHandlerTest extends KernelTestCase
 
     /**
      * @dataProvider recordGenerator
+     *
      * @param $record
      */
     public function testWrite($record)
     {
-        $this->markTestIncomplete('TODO: write body');
+        $container = static::$kernel->getContainer();
+        $handler   = new \SymfonyRollbarBundle\Provider\RollbarHandler($container);
+
+        $property = new \ReflectionProperty($handler, 'hasRecords');
+        $property->setAccessible(true);
+
+        $method = new \ReflectionMethod($handler, 'write');
+        $method->setAccessible(true);
+
+        $this->assertFalse($property->getValue($handler));
+        $method->invoke($handler, $record);
+        $this->assertTrue($property->getValue($handler));
     }
 
+    /**
+     * @return array
+     */
     public function recordGenerator()
     {
         return [
             [
                 [
-                    'context' => [
-                        'level' => \Monolog\Logger::ERROR,
+                    'message'    => 'RecordGenerator :: #1',
+                    'datetime'   => new \DateTime(),
+                    'level'      => \Monolog\Logger::ERROR,
+                    'level_name' => \Monolog\Logger::ERROR,
+                    'channel'    => 'symfony.rollbar',
+                    'extra'      => [],
+                    'context'    => [
                         'exception' => new \Exception('RecordGenerator :: #1'),
-                        'message' => 'RecordGenerator :: #1',
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 [
-                    'context' => [
-                        'level' => \Monolog\Logger::ERROR,
-                        'message' => 'RecordGenerator :: #2',
-                    ]
-                ]
+                    'message'    => 'RecordGenerator :: #2',
+                    'datetime'   => new \DateTime(),
+                    'level'      => \Monolog\Logger::ERROR,
+                    'level_name' => \Monolog\Logger::ERROR,
+                    'channel'    => 'symfony.rollbar',
+                    'extra'      => [],
+                    'context'    => [],
+                ],
             ],
         ];
+    }
+
+    /**
+     * @dataProvider recordGenerator
+     * @param $record
+     */
+    public function testClose($record)
+    {
+        $container = static::$kernel->getContainer();
+        $handler   = new \SymfonyRollbarBundle\Provider\RollbarHandler($container);
+
+        $property = new \ReflectionProperty($handler, 'hasRecords');
+        $property->setAccessible(true);
+
+        $method = new \ReflectionMethod($handler, 'write');
+        $method->setAccessible(true);
+
+        $this->assertFalse($property->getValue($handler));
+        $method->invoke($handler, $record);
+        $this->assertTrue($property->getValue($handler));
+
+        $handler->close();
+        $this->assertFalse($property->getValue($handler));
     }
 }
