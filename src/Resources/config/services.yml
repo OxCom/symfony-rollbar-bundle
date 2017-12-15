@@ -17,5 +17,6 @@ services:
       - { name: kernel.event_listener, event: kernel.exception }
 
   symfony_rollbar.provider.rollbar_handler:
+    public: true
     class: SymfonyRollbarBundle\Provider\RollbarHandler
     arguments: ["@service_container"]

@@ -25,10 +25,13 @@ class AppKernel extends Kernel
 
     /**
      * @param \Symfony\Component\Config\Loader\LoaderInterface $loader
+     *
+     * @throws \Exception
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
+        $path = $this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml';
+        $loader->load($path);
     }
 
     /**
