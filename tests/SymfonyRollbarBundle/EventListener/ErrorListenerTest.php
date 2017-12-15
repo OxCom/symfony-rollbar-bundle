@@ -42,7 +42,6 @@ class ErrorListenerTest extends KernelTestCase
 
             $exception = $record['context']['exception'];
             $this->assertInstanceOf(ErrorWrapper::class, $exception);
-            restore_error_handler();
         });
 
         foreach ($listeners as $listener) {
@@ -84,7 +83,6 @@ class ErrorListenerTest extends KernelTestCase
 
                 $exception = $record['context']['exception'];
                 $this->assertInstanceOf(ErrorWrapper::class, $exception);
-                restore_error_handler();
             } catch (\Exception $e) {
                 echo implode("\n", [
                     $e->getMessage(),
