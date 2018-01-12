@@ -12,7 +12,7 @@ Step 1: Download the Bundle
 Open a command console, enter your project directory and execute the
 following command to download the latest stable version of this bundle:
 
-.. code-block:: bash
+.. code-block:: yaml
 
     $ composer require oxcom/symfony-rollbar-bundle
 
@@ -24,7 +24,8 @@ Step 2: Enable the Bundle
 Then, enable the bundle by adding it to the list of registered bundles
 in the ``AppKernel::registerBundles()`` of your project:
 
-.. note::
+.. code-block:: php
+
     public function registerBundles()
     {
         $bundles = [
@@ -39,12 +40,14 @@ in the ``AppKernel::registerBundles()`` of your project:
 Step 3: Update configuration
 ----------------------------
 Add new section in configuration file
+
 .. code-block:: yaml
+
     symfony_rollbar:
-      enable: true
-      rollbar:
-        access_token: '%ROLLBAR_ACCESS_TOKEN%'
-        environment: '%kernel.environment%'
+        enable: true
+        rollbar:
+            access_token: '%ROLLBAR_ACCESS_TOKEN%'
+            environment: '%kernel.environment%'
 
 Replace ``%ROLLBAR_ACCESS_TOKEN%`` with token for Rollbar
 

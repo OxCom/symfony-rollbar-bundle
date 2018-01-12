@@ -2,12 +2,13 @@ Configuration
 =============
 
 Simple configuration of bundle:
-.. code-block:: yaml
-    symfony_rollbar:
-      rollbar:
-        access_token: 'some-secret-token-here'
-        environment: '%kernel.environment%'
 
+.. code-block:: yaml
+
+    symfony_rollbar:
+        rollbar:
+            access_token: 'some-secret-token-here'
+            environment: '%kernel.environment%'
 
 Bundle configuration
 --------------------
