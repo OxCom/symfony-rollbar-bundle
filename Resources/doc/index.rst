@@ -25,9 +25,6 @@ Then, enable the bundle by adding it to the list of registered bundles
 in the ``AppKernel::registerBundles()`` of your project:
 
 .. note::
-    <?php
-
-    // ..
     public function registerBundles()
     {
         $bundles = [
@@ -50,4 +47,5 @@ Add new section in configuration file
         environment: '%kernel.environment%'
 
 Replace ``%ROLLBAR_ACCESS_TOKEN%`` with token for Rollbar
+
 .. _`installation chapter`: https://getcomposer.org/doc/00-intro.md
