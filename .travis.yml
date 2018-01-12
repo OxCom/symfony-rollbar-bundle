@@ -11,8 +11,8 @@ before_install:
 
 script:
   - php -v
-  - vendor/bin/phpcs --standard=psr2 src/ tests/SymfonyRollbarBundle
-  - vendor/bin/phpunit -c tests
+  - ./vendor/bin/phpcs --standard=psr2 DependencyInjection/ EventListener/ Provider/ Tests/SymfonyRollbarBundle
+  - ./vendor/bin/phpunit -c Tests/phpunit.xml.dist
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)
