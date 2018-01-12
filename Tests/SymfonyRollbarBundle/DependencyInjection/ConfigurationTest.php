@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\SymfonyRollbarBundle\DependencyInjection;
+namespace SymfonyRollbarBundle\Tests\DependencyInjection;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use SymfonyRollbarBundle\DependencyInjection\Configuration;
@@ -8,7 +8,7 @@ use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
 
 /**
  * Class ConfigurationTest
- * @package Tests\SymfonyRollbarBundle\DependencyInjection
+ * @package SymfonyRollbarBundle\Tests\DependencyInjection
  */
 class ConfigurationTest extends KernelTestCase
 {

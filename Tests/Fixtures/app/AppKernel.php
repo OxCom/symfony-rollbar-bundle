@@ -1,5 +1,7 @@
 <?php
 
+namespace SymfonyRollbarBundle\Tests\Fixtures\app;
+
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -25,6 +27,8 @@ class AppKernel extends Kernel
 
     /**
      * @param \Symfony\Component\Config\Loader\LoaderInterface $loader
+     *
+     * @throws \Exception
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {

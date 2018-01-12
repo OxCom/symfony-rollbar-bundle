@@ -1,8 +1,6 @@
 .idea
 /coverage/
 /vendor/
-/var/
-!/var/.gitkeep
 
 composer.lock
 clover.xml

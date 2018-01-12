@@ -1,5 +1,5 @@
 <?php
-namespace Tests\SymfonyRollbarBundle\EventListener;
+namespace SymfonyRollbarBundle\Tests\EventListener;
 
 use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -11,7 +11,7 @@ use Tests\Fixtures\ErrorHandler;
 
 /**
  * Class ExceptionListenerTest
- * @package Tests\SymfonyRollbarBundle\EventListener
+ * @package SymfonyRollbarBundle\Tests\EventListener
  */
 class ExceptionListenerTest extends KernelTestCase
 {
@@ -42,6 +42,7 @@ class ExceptionListenerTest extends KernelTestCase
         );
 
         $eventDispatcher->dispatch('kernel.exception', $event);
+        restore_error_handler();
     }
 
     public function generateEventExceptions()

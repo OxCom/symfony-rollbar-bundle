@@ -1,5 +1,5 @@
 <?php
-namespace Tests\SymfonyRollbarBundle\EventListener;
+namespace SymfonyRollbarBundle\Tests\EventListener;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
@@ -10,7 +10,7 @@ use SymfonyRollbarBundle\EventListener\ExceptionListener;
 
 /**
  * Class AbstractListenerTest
- * @package Tests\SymfonyRollbarBundle\EventListener
+ * @package SymfonyRollbarBundle\Tests\EventListener
  */
 class AbstractListenerTest extends KernelTestCase
 {
@@ -40,6 +40,8 @@ class AbstractListenerTest extends KernelTestCase
             $ok = $listener[0] instanceof $expected[0] || $listener[0] instanceof $expected[1];
             $this->assertTrue($ok, 'Listeners were not registered');
         }
+
+        restore_error_handler();
     }
 
     /**
@@ -60,6 +62,9 @@ class AbstractListenerTest extends KernelTestCase
      */
     public function testGetSubscribedEvents($class)
     {
+        $handler = set_error_handler('var_dump');
+        restore_error_handler();
+
         /**
          * @var AbstractListener $listener
          */
@@ -72,6 +77,7 @@ class AbstractListenerTest extends KernelTestCase
         $list = $listener::getSubscribedEvents();
 
         $this->assertEquals($expect, $list);
+        set_error_handler($handler);
     }
 
     /**
@@ -81,6 +87,9 @@ class AbstractListenerTest extends KernelTestCase
      */
     public function testGetLogger($class)
     {
+        $handler = set_error_handler('var_dump');
+        restore_error_handler();
+
         /**
          * @var AbstractListener $listener
          */
@@ -89,5 +98,6 @@ class AbstractListenerTest extends KernelTestCase
 
         $logger = $listener->getLogger();
         $this->assertTrue($logger instanceof \Monolog\Logger);
+        set_error_handler($handler);
     }
 }

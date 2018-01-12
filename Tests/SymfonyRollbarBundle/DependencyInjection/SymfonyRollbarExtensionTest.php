@@ -1,5 +1,5 @@
 <?php
-namespace Tests\SymfonyRollbarBundle\DependencyInjection;
+namespace SymfonyRollbarBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
@@ -10,7 +10,7 @@ use SymfonyRollbarBundle\Provider\RollbarHandler;
 
 /**
  * Class SymfonyRollbarExtensionTest
- * @package Tests\SymfonyRollbarBundle\DependencyInjection
+ * @package SymfonyRollbarBundle\Tests\DependencyInjection
  */
 class SymfonyRollbarExtensionTest extends AbstractExtensionTestCase
 {
