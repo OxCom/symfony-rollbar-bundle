@@ -24,7 +24,7 @@ Step 2: Enable the Bundle
 Then, enable the bundle by adding it to the list of registered bundles
 in the ``AppKernel::registerBundles()`` of your project:
 
-.. code-block:: php
+.. note::
     <?php
 
     // ..
@@ -40,13 +40,14 @@ in the ``AppKernel::registerBundles()`` of your project:
     }
 
 Step 3: Update configuration
----------------------------
-3. Update configuration
-.. code-block:: yml
+----------------------------
+Add new section in configuration file
+.. code-block:: yaml
     symfony_rollbar:
       enable: true
       rollbar:
         access_token: '%ROLLBAR_ACCESS_TOKEN%'
         environment: '%kernel.environment%'
 
+Replace ``%ROLLBAR_ACCESS_TOKEN%`` with token for Rollbar
 .. _`installation chapter`: https://getcomposer.org/doc/00-intro.md

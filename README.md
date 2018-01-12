@@ -4,7 +4,8 @@
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
 Bundle for Symfony3 that integrates Rollbar tracker
-Docs [here](https://github.com/OxCom/symfony3-rollbar-bundle/tree/master/Resources/doc)
+
+Some documentation can be found here [here](https://github.com/OxCom/symfony3-rollbar-bundle/tree/master/Resources/doc)
 
 # Tests
 To run test You have to provide an access token and then run test

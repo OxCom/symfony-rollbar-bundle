@@ -1,7 +1,7 @@
 Configuration
-=======================
+=============
 Simple configuration of bundle:
-.. code-block:: php
+.. code-block:: yaml
     symfony_rollbar:
       rollbar:
         access_token: 'some-secret-token-here'
@@ -9,7 +9,7 @@ Simple configuration of bundle:
 
 
 Bundle configuration
----------------------------
+--------------------
 ####
 ``enable``: It's possible to enable or disable handling of errors and exceptions.  Default: ``true``
 
