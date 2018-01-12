@@ -1,5 +1,5 @@
 <?php
-namespace Tests\SymfonyRollbarBundle\EventListener;
+namespace SymfonyRollbarBundle\Tests\EventListener;
 
 use Monolog\Logger;
 use Rollbar\ErrorWrapper;
@@ -10,7 +10,7 @@ use SymfonyRollbarBundle\EventListener\ErrorListener;
 
 /**
  * Class ErrorListenerTest
- * @package Tests\SymfonyRollbarBundle\EventListener
+ * @package SymfonyRollbarBundle\Tests\EventListener
  */
 class ErrorListenerTest extends KernelTestCase
 {
@@ -56,6 +56,7 @@ class ErrorListenerTest extends KernelTestCase
         }
 
         trigger_error($message, E_USER_ERROR);
+        restore_error_handler();
     }
 
     /**
@@ -83,6 +84,7 @@ class ErrorListenerTest extends KernelTestCase
 
                 $exception = $record['context']['exception'];
                 $this->assertInstanceOf(ErrorWrapper::class, $exception);
+                restore_error_handler();
             } catch (\Exception $e) {
                 echo implode("\n", [
                     $e->getMessage(),
@@ -102,7 +104,6 @@ class ErrorListenerTest extends KernelTestCase
             $listener[0]->getLogger()->setHandlers([$handler]);
         }
 
-        // @ will allow to skip fatal error inside application, but we can get error with error_get_last()
         if (version_compare(PHP_VERSION, '7.0.0')  >= 0) {
             $this->expectException('Error');
             $this->expectExceptionMessage('Call to undefined function this_is_fatal_error()');

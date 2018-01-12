@@ -1,5 +1,5 @@
 <?php
-namespace Tests\SymfonyRollbarBundle\EventListener;
+namespace SymfonyRollbarBundle\Tests\EventListener;
 
 use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -7,11 +7,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
 use \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use SymfonyRollbarBundle\EventListener\AbstractListener;
 use Tests\Fixtures\ErrorHandler;
 
 /**
  * Class ExceptionListenerTest
- * @package Tests\SymfonyRollbarBundle\EventListener
+ * @package SymfonyRollbarBundle\Tests\EventListener
  */
 class ExceptionListenerTest extends KernelTestCase
 {
@@ -24,9 +25,9 @@ class ExceptionListenerTest extends KernelTestCase
 
     /**
      * @dataProvider generateEventExceptions
-     * @param $exception
+     * @param \Exception $expected
      */
-    public function testException($exception)
+    public function testException($expected)
     {
         $container = static::$kernel->getContainer();
 
@@ -34,14 +35,39 @@ class ExceptionListenerTest extends KernelTestCase
          * @var TraceableEventDispatcher $eventDispatcher
          */
         $eventDispatcher = $container->get('event_dispatcher');
+        $listeners       = $eventDispatcher->getListeners('kernel.exception');
         $event           = new GetResponseForExceptionEvent(
             static::$kernel,
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
-            $exception
+            $expected
         );
 
+        $handler = new ErrorHandler();
+        $handler->setAssert(function ($record) use ($expected) {
+            $this->assertNotEmpty($record);
+
+            $this->assertEquals($expected->getMessage(), $record['message']);
+            $this->assertEquals(Logger::ERROR, $record['level']);
+            $this->assertNotEmpty($record['context']['exception']);
+
+            $exception = $record['context']['exception'];
+            $this->assertInstanceOf(\Exception::class, $exception);
+        });
+
+        foreach ($listeners as $listener) {
+            /**
+             * @var AbstractListener $listener
+             */
+            if (!$listener[0] instanceof AbstractListener) {
+                continue;
+            }
+
+            $listener[0]->getLogger()->setHandlers([$handler]);
+        }
+
         $eventDispatcher->dispatch('kernel.exception', $event);
+        restore_error_handler();
     }
 
     public function generateEventExceptions()

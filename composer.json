@@ -10,33 +10,37 @@
         }
     ],
     "autoload": {
-        "psr-4": { "SymfonyRollbarBundle\\": "src/" }
+        "psr-4": { "SymfonyRollbarBundle\\": "./" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     },
     "autoload-dev": {
-        "psr-4": { "Tests\\": "tests/"}
+        "psr-4": { "Tests\\": "Tests/"},
+        "files": [
+            "Tests/Fixtures/app/AppKernel.php"
+        ]
     },
     "require": {
         "php": ">=5.6",
         "monolog/monolog": "^1.23",
         "rollbar/rollbar": "^1.3",
-        "symfony/dependency-injection": "^3.4",
-        "symfony/config": "^3.3",
-        "symfony/http-kernel": "^3.3"
+        "symfony/dependency-injection": "~3.0|~4.0",
+        "symfony/config": "~3.0|~4.0",
+        "symfony/http-kernel": "~3.0|~4.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7",
-        "doctrine/doctrine-fixtures-bundle": "^2.4",
-        "squizlabs/php_codesniffer": "^2.9",
-        "matthiasnoback/symfony-dependency-injection-test": "^1.2",
-        "symfony/phpunit-bridge": "3.3.*",
-        "symfony/config": "3.3.*",
-        "symfony/http-kernel": "3.3.*"
+        "phpunit/phpunit": "^5.7 || ^6.5",
+        "doctrine/doctrine-fixtures-bundle": "^2.3",
+        "squizlabs/php_codesniffer": "^3.2",
+        "matthiasnoback/symfony-dependency-injection-test": "^1.2||^2.3",
+        "symfony/phpunit-bridge": "^4.0"
     },
     "scripts": {
         "test": [
             "composer install",
-            "./vendor/bin/phpcs --standard=psr2 src/ tests/SymfonyRollbarBundle",
-            "./vendor/bin/phpunit -c tests/"
+            "./vendor/bin/phpcs --standard=psr2 DependencyInjection/ EventListener/ Provider/ Tests/SymfonyRollbarBundle",
+            "./vendor/bin/phpunit -c Tests/phpunit.xml.dist"
         ]
     }
 }

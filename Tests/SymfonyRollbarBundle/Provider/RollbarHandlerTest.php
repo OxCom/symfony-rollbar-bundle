@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\SymfonyRollbarBundle\Provider;
+namespace SymfonyRollbarBundle\Tests\Provider;
 
 use Rollbar\Payload\Level;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 /**
  * Class RollbarHandlerTest
  *
- * @package Tests\SymfonyRollbarBundle\Provider
+ * @package SymfonyRollbarBundle\Tests\Provider
  */
 class RollbarHandlerTest extends KernelTestCase
 {

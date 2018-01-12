@@ -1,6 +1,7 @@
 <?php
-namespace Tests\SymfonyRollbarBundle;
+namespace SymfonyRollbarBundle\Tests;
 
+use Symfony\Bridge\PhpUnit\DeprecationErrorHandler;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
@@ -9,7 +10,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Class BundleTest
- * @package Tests\SymfonyRollbarBundle
+ * @package SymfonyRollbarBundle\Tests
  */
 class BundleTest extends KernelTestCase
 {
@@ -39,5 +40,7 @@ class BundleTest extends KernelTestCase
             $ok = $listener[0] instanceof $expected[0] || $listener[0] instanceof $expected[1];
             $this->assertTrue($ok, 'Listeners were not registered');
         }
+
+        restore_error_handler();
     }
 }
