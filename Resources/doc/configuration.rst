@@ -6,6 +6,7 @@ Simple configuration of bundle:
 .. code-block:: yaml
 
     symfony_rollbar:
+        enable: true
         rollbar:
             access_token: 'some-secret-token-here'
             environment: '%kernel.environment%'
@@ -50,7 +51,7 @@ Bundle configuration
 
 ``enable``: It's possible to enable or disable handling of errors and exceptions.  Default: ``true``
 
-``rollbar`` - configuration parameters for Rollbar instance. Full list of options can be found
+``rollbar``: Configuration parameters for Rollbar instance. Full list of options can be found
 in `official documentation`_ for Rollbar PHP lib.
 
 .. _`official documentation`: https://rollbar.com/docs/notifier/rollbar-php/
