@@ -1,7 +1,7 @@
 {
     "name": "oxcom/symfony-rollbar-bundle",
     "description": "Bundle for Symfony 3 that integrates Rollbar tracker",
-    "type": "library",
+    "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
         {
