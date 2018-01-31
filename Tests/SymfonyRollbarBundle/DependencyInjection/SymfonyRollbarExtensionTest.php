@@ -2,6 +2,7 @@
 namespace SymfonyRollbarBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use SymfonyRollbarBundle\DependencyInjection\Configuration;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
 use SymfonyRollbarBundle\EventListener\ErrorListener;
 use SymfonyRollbarBundle\EventListener\ExceptionListener;
@@ -44,7 +45,7 @@ class SymfonyRollbarExtensionTest extends AbstractExtensionTestCase
             ['symfony_rollbar.event_listener.exception_listener.class', ExceptionListener::class],
             ['symfony_rollbar.event_listener.error_listener.class', ErrorListener::class],
             ['symfony_rollbar.provider.rollbar_handler.class', RollbarHandler::class],
-            ['symfony_rollbar.config', ['enable' => true]],
+            ['symfony_rollbar.config', ['enable' => true, 'exclude' => Configuration::$exclude]],
         ];
     }
 

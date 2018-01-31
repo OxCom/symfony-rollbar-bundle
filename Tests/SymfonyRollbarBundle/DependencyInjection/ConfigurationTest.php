@@ -22,6 +22,7 @@ class ConfigurationTest extends KernelTestCase
 
         $default = [
             'enable' => true,
+            'exclude' => Configuration::$exclude,
             'rollbar' => [
                 'access_token'                   => getenv('ROLLBAR_ACCESS_TOKEN'),
                 'agent_log_location'             => static::$kernel->getLogDir() . '/rollbar.log',

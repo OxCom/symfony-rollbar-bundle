@@ -7,6 +7,8 @@ Simple configuration of bundle:
 
     symfony_rollbar:
         enable: true
+        exclude:
+            - \Symfony\Component\Debug\Exception\UndefinedFunctionException
         rollbar:
             access_token: 'some-secret-token-here'
             environment: '%kernel.environment%'
@@ -50,6 +52,8 @@ Bundle configuration
 --------------------
 
 ``enable``: It's possible to enable or disable handling of errors and exceptions.  Default: ``true``
+
+``exclude``: List exceptions that should be excluded from notification
 
 ``rollbar``: Configuration parameters for Rollbar instance. Full list of options can be found
 in `official documentation`_ for Rollbar PHP lib.

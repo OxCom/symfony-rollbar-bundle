@@ -35,6 +35,15 @@ class Configuration implements ConfigurationInterface
     ];
 
     /**
+     * List of classes that should be excluded
+     *
+     * @var array
+     */
+    public static $exclude = [
+        '\Symfony\Component\Debug\Exception\UndefinedFunctionException',
+    ];
+
+    /**
      * @inheritdoc
      */
     public function getConfigTreeBuilder()
@@ -46,6 +55,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('enable')->defaultTrue()->end()
+                ->scalarNode('exclude')->defaultValue(static::$exclude)->end()
                 ->arrayNode('rollbar')->children()
                     ->scalarNode('access_token')->defaultValue('')->end()
                     ->scalarNode('agent_log_location')->defaultValue('%kernel.logs_dir%/rollbar.log')->end()

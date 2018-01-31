@@ -26,6 +26,11 @@ abstract class AbstractListener implements EventSubscriberInterface
     protected $container;
 
     /**
+     * @var array
+     */
+    protected $exclude = [];
+
+    /**
      * AbstractListener constructor.
      *
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
@@ -38,6 +43,9 @@ abstract class AbstractListener implements EventSubscriberInterface
         $this->logger    = new Logger(SymfonyRollbarExtension::ALIAS);
         $this->container = $container;
         $rbHandler       = $this->getContainer()->get('symfony_rollbar.provider.rollbar_handler');
+
+        $config = $this->getContainer()->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
+        $this->exclude = empty($config['exclude']) ? [] : $config['exclude'];
 
         $this->getLogger()->pushHandler($rbHandler);
     }
@@ -71,5 +79,13 @@ abstract class AbstractListener implements EventSubscriberInterface
     public function getContainer()
     {
         return $this->container;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExclude()
+    {
+        return $this->exclude;
     }
 }
