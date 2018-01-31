@@ -7,6 +7,22 @@ Bundle for Symfony3 that integrates Rollbar tracker
 
 Some documentation can be found here [here](https://github.com/OxCom/symfony3-rollbar-bundle/tree/master/Resources/doc)
 
+# Install
+1. Add bundle as dependency
+    ```bash
+    $ composer require oxcom/symfony-rollbar-bundle
+    ```
+2. Provide configuration for it
+    ```yaml
+    symfony_rollbar:
+            enable: true
+            exclude:
+                - \Symfony\Component\Debug\Exception\FatalErrorException
+                - \AppBundle\Exceptions\MyAwesomeException
+            rollbar:
+                access_token: 'some-secret-token-here'
+    ```
+
 # Tests
 To run test You have to provide an access token and then run test
 ```bash
