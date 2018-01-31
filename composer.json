@@ -3,6 +3,11 @@
     "description": "Bundle for Symfony 3 that integrates Rollbar tracker",
     "type": "symfony-bundle",
     "license": "MIT",
+    "keywords": [
+        "symfony",
+        "rollbar",
+        "errors"
+    ],
     "authors": [
         {
             "name": "OxCom",
