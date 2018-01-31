@@ -40,11 +40,13 @@ class AppKernel extends Kernel
      */
     public function getCacheDir()
     {
-        return sys_get_temp_dir() . '/var/' . $this->environment . '/cache';
+        $path = realpath(__DIR__ . '/../var/' . $this->environment . '/cache');
+        return $path;
     }
 
     public function getLogDir()
     {
-        return sys_get_temp_dir() . '/var/' . $this->environment . '/logs';
+        $path = realpath(__DIR__ . '/../var/' . $this->environment . '/logs');
+        return $path;
     }
 }
