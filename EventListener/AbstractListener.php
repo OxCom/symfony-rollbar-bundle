@@ -26,6 +26,11 @@ abstract class AbstractListener implements EventSubscriberInterface
     protected $container;
 
     /**
+     * @var \SymfonyRollbarBundle\Provider\RollbarHandler
+     */
+    protected $handler;
+
+    /**
      * @var array
      */
     protected $exclude = [];
@@ -47,6 +52,7 @@ abstract class AbstractListener implements EventSubscriberInterface
         $config = $this->getContainer()->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
         $this->exclude = empty($config['exclude']) ? [] : $config['exclude'];
 
+        $this->handler = $rbHandler;
         $this->getLogger()->pushHandler($rbHandler);
     }
 

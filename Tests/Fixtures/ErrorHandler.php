@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Fixtures;
+namespace SymfonyRollbarBundle\Tests\Fixtures;
 
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
@@ -8,7 +8,7 @@ use Monolog\Logger;
 class ErrorHandler extends AbstractProcessingHandler
 {
     /**
-     * @var \Tests\Fixtures\ErrorHandler
+     * @var \SymfonyRollbarBundle\Tests\Fixtures\ErrorHandler
      */
     protected static $instance;
 
@@ -18,7 +18,7 @@ class ErrorHandler extends AbstractProcessingHandler
     protected $assert;
 
     /**
-     * @return \Tests\Fixtures\ErrorHandler
+     * @return \SymfonyRollbarBundle\Tests\Fixtures\ErrorHandler
      */
     public static function getInstance()
     {

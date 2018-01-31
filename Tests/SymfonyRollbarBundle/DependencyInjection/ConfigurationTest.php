@@ -20,9 +20,12 @@ class ConfigurationTest extends KernelTestCase
         $config           = $container->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
         $defaultErrorMask = E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_USER_ERROR | E_RECOVERABLE_ERROR;
 
+        $exclude = Configuration::$exclude;
+        $exclude[] = '\SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException';
+
         $default = [
             'enable' => true,
-            'exclude' => Configuration::$exclude,
+            'exclude' => $exclude,
             'rollbar' => [
                 'access_token'                   => getenv('ROLLBAR_ACCESS_TOKEN'),
                 'agent_log_location'             => static::$kernel->getLogDir() . '/rollbar.log',

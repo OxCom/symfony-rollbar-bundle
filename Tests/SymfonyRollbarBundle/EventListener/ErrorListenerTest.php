@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
 use SymfonyRollbarBundle\EventListener\AbstractListener;
 use SymfonyRollbarBundle\EventListener\ErrorListener;
 use SymfonyRollbarBundle\Provider\RollbarHandler;
+use SymfonyRollbarBundle\Tests\Fixtures\ErrorHandler;
 
 /**
  * Class ErrorListenerTest
@@ -33,7 +34,7 @@ class ErrorListenerTest extends KernelTestCase
          */
         $eventDispatcher = $container->get('event_dispatcher');
         $listeners = $eventDispatcher->getListeners('kernel.exception');
-        $handler = \Tests\Fixtures\ErrorHandler::getInstance();
+        $handler = ErrorHandler::getInstance();
 
         $handler->setAssert(function (array $record) use ($message) {
             $this->assertNotEmpty($record);
@@ -73,7 +74,7 @@ class ErrorListenerTest extends KernelTestCase
          */
         $eventDispatcher = $container->get('event_dispatcher');
         $listeners       = $eventDispatcher->getListeners('kernel.exception');
-        $handler         = \Tests\Fixtures\ErrorHandler::getInstance();
+        $handler         = ErrorHandler::getInstance();
         $rbHandler       = new RollbarHandler($container);
 
         $handler->setAssert(function (array $record) use ($rbHandler) {

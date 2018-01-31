@@ -8,8 +8,10 @@ use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
 use \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use SymfonyRollbarBundle\EventListener\AbstractListener;
+use SymfonyRollbarBundle\EventListener\ExceptionListener;
 use SymfonyRollbarBundle\Provider\RollbarHandler;
-use Tests\Fixtures\ErrorHandler;
+use SymfonyRollbarBundle\Tests\Fixtures\ErrorHandler;
+use SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException;
 
 /**
  * Class ExceptionListenerTest
@@ -105,7 +107,7 @@ class ExceptionListenerTest extends KernelTestCase
             $this->assertInstanceOf(\Exception::class, $exception);
         });
 
-        $listener = new \SymfonyRollbarBundle\EventListener\ExceptionListener($container);
+        $listener = new ExceptionListener($container);
         $listener->getLogger()->setHandlers([$handler]);
 
         $listener->handleException($data);
@@ -122,5 +124,41 @@ class ExceptionListenerTest extends KernelTestCase
             [['a' => 'b']],
             [(object)['a' => 'b']],
         ];
+    }
+
+    public function testSkipException()
+    {
+        $container = static::$kernel->getContainer();
+
+        /**
+         * @var TraceableEventDispatcher $eventDispatcher
+         */
+        $eventDispatcher = $container->get('event_dispatcher');
+        $listeners       = $eventDispatcher->getListeners('kernel.exception');
+        $event           = new GetResponseForExceptionEvent(
+            static::$kernel,
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST,
+            new MyAwesomeException("Hello!")
+        );
+
+        $handler = new ErrorHandler();
+        $handler->setAssert(function ($record) {
+            $this->fail("This should be newer called!");
+        });
+
+        foreach ($listeners as $listener) {
+            /**
+             * @var AbstractListener $listener
+             */
+            if (!$listener[0] instanceof AbstractListener) {
+                continue;
+            }
+
+            $listener[0]->getLogger()->setHandlers([$handler]);
+        }
+
+        $eventDispatcher->dispatch('kernel.exception', $event);
+        restore_error_handler();
     }
 }

@@ -4,6 +4,9 @@ imports:
 
 symfony_rollbar:
   enable: true
+  exclude:
+      - \Symfony\Component\Debug\Exception\FatalErrorException
+      - \SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException
   rollbar:
     access_token: '%env(ROLLBAR_ACCESS_TOKEN)%'
     environment: '%kernel.environment%'
