@@ -80,12 +80,4 @@ abstract class AbstractListener implements EventSubscriberInterface
     {
         return $this->container;
     }
-
-    /**
-     * @return array
-     */
-    public function getExclude()
-    {
-        return $this->exclude;
-    }
 }

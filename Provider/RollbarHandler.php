@@ -28,6 +28,11 @@ class RollbarHandler extends AbstractProcessingHandler
     protected $hasRecords = false;
 
     /**
+     * @var array
+     */
+    protected $exclude;
+
+    /**
      * Monolog vs Rollbar
      * @var array
      */
@@ -67,6 +72,8 @@ class RollbarHandler extends AbstractProcessingHandler
         foreach ($override as $key => $value) {
             $rConfig[$key] = $value;
         }
+
+        $this->exclude = empty($config['exclude']) ? [] : $config['exclude'];
 
         RollbarNotifier::init($rConfig, false, false, false);
     }
@@ -109,12 +116,33 @@ class RollbarHandler extends AbstractProcessingHandler
             $exception        = $context['exception'];
             unset($context['exception']);
 
+            if ($this->shouldSkip($exception)) {
+                return;
+            }
+
             RollbarNotifier::log(Level::ERROR, $exception, $payload);
         } else {
             RollbarNotifier::log($context['level'], $record['message'], $payload);
         }
 
         $this->hasRecords = true;
+    }
+
+    /**
+     * @param \Exception $exception
+     *
+     * @return bool
+     */
+    public function shouldSkip(\Exception $exception)
+    {
+        // check exception
+        foreach ($this->exclude as $instance) {
+            if (class_exists($instance) && $exception instanceof $instance) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function flush()

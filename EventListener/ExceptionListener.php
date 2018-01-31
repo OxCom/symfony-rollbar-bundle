@@ -42,12 +42,15 @@ class ExceptionListener extends AbstractListener
      */
     public function handleException($exception)
     {
-        // check exception
-        foreach ($this->getExclude() as $instance) {
-            if ($exception instanceof $instance) {
-                return;
+        if ($exception instanceof \Exception) {
+            // check exception
+            foreach ($this->exclude as $instance) {
+                if (class_exists($instance) && $exception instanceof $instance) {
+                    return;
+                }
             }
         }
+
 
         $payload = [];
         // @link http://php.net/manual/en/reserved.constants.php

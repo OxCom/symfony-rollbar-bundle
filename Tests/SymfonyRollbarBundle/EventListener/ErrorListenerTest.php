@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
 use SymfonyRollbarBundle\EventListener\AbstractListener;
 use SymfonyRollbarBundle\EventListener\ErrorListener;
+use SymfonyRollbarBundle\Provider\RollbarHandler;
 
 /**
  * Class ErrorListenerTest
@@ -71,18 +72,23 @@ class ErrorListenerTest extends KernelTestCase
          * @var TraceableEventDispatcher $eventDispatcher
          */
         $eventDispatcher = $container->get('event_dispatcher');
-        $listeners = $eventDispatcher->getListeners('kernel.exception');
-        $handler = \Tests\Fixtures\ErrorHandler::getInstance();
+        $listeners       = $eventDispatcher->getListeners('kernel.exception');
+        $handler         = \Tests\Fixtures\ErrorHandler::getInstance();
+        $rbHandler       = new RollbarHandler($container);
 
-        $handler->setAssert(function (array $record) {
+        $handler->setAssert(function (array $record) use ($rbHandler) {
             try {
+                $exception = $record['context']['exception'];
+
+                if ($rbHandler->shouldSkip($exception)) {
+                    return;
+                }
+
                 $this->assertNotEmpty($record);
 
                 $this->assertEquals('Call to undefined function this_is_fatal_error()', $record['message'], '');
                 $this->assertEquals(Logger::ERROR, $record['level']);
                 $this->assertNotEmpty($record['context']['exception']);
-
-                $exception = $record['context']['exception'];
                 $this->assertInstanceOf(ErrorWrapper::class, $exception);
                 restore_error_handler();
             } catch (\Exception $e) {

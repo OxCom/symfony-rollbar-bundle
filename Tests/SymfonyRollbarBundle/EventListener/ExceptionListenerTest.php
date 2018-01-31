@@ -8,11 +8,13 @@ use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
 use \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use SymfonyRollbarBundle\EventListener\AbstractListener;
+use SymfonyRollbarBundle\Provider\RollbarHandler;
 use Tests\Fixtures\ErrorHandler;
 
 /**
  * Class ExceptionListenerTest
  * @package SymfonyRollbarBundle\Tests\EventListener
+ * @runTestsInSeparateProcesses
  */
 class ExceptionListenerTest extends KernelTestCase
 {
@@ -36,6 +38,7 @@ class ExceptionListenerTest extends KernelTestCase
          */
         $eventDispatcher = $container->get('event_dispatcher');
         $listeners       = $eventDispatcher->getListeners('kernel.exception');
+        $rbHandler       = new RollbarHandler($container);
         $event           = new GetResponseForExceptionEvent(
             static::$kernel,
             new Request(),
@@ -44,14 +47,18 @@ class ExceptionListenerTest extends KernelTestCase
         );
 
         $handler = new ErrorHandler();
-        $handler->setAssert(function ($record) use ($expected) {
+        $handler->setAssert(function ($record) use ($expected, $rbHandler) {
             $this->assertNotEmpty($record);
+
+            $this->assertNotEmpty($record['context']['exception']);
+            $exception = $record['context']['exception'];
+            if ($rbHandler->shouldSkip($expected)) {
+                return;
+            }
 
             $this->assertEquals($expected->getMessage(), $record['message']);
             $this->assertEquals(Logger::ERROR, $record['level']);
-            $this->assertNotEmpty($record['context']['exception']);
 
-            $exception = $record['context']['exception'];
             $this->assertInstanceOf(\Exception::class, $exception);
         });
 
