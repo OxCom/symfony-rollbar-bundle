@@ -6,7 +6,8 @@
     "keywords": [
         "symfony",
         "rollbar",
-        "errors"
+        "errors",
+        "bundle"
     ],
     "authors": [
         {
