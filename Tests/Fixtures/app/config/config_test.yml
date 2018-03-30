@@ -8,5 +8,5 @@ symfony_rollbar:
       - \Symfony\Component\Debug\Exception\FatalErrorException
       - \SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException
   rollbar:
-    access_token: '%env(ROLLBAR_ACCESS_TOKEN)%'
+    access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_123456'
     environment: '%kernel.environment%'

@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
 use \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Kernel;
 use SymfonyRollbarBundle\EventListener\AbstractListener;
 use SymfonyRollbarBundle\EventListener\ExceptionListener;
 use SymfonyRollbarBundle\Provider\RollbarHandler;
@@ -23,6 +24,15 @@ class ExceptionListenerTest extends KernelTestCase
     public function setUp()
     {
         parent::setUp();
+
+        // hack for Symfony 2.8 and ERRORS
+        if (2 === Kernel::MAJOR_VERSION && Kernel::MINOR_VERSION >= 8) {
+            $_SERVER['argv'] = [
+                './vendor/bin/phpunit',
+                '-c',
+                'Tests/phpunit.xml.dist',
+            ];
+        }
 
         static::bootKernel();
     }

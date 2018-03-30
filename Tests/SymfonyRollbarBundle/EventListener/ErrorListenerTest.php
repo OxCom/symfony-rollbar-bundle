@@ -5,6 +5,7 @@ use Monolog\Logger;
 use Rollbar\ErrorWrapper;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
+use Symfony\Component\HttpKernel\Kernel;
 use SymfonyRollbarBundle\EventListener\AbstractListener;
 use SymfonyRollbarBundle\EventListener\ErrorListener;
 use SymfonyRollbarBundle\Provider\RollbarHandler;
@@ -20,6 +21,15 @@ class ErrorListenerTest extends KernelTestCase
     public function setUp()
     {
         parent::setUp();
+
+        // hack for Symfony 2.8 and ERRORS
+        if (2 === Kernel::MAJOR_VERSION && Kernel::MINOR_VERSION >= 8) {
+            $_SERVER['argv'] = [
+                './vendor/bin/phpunit',
+                '-c',
+                'Tests/phpunit.xml.dist',
+            ];
+        }
 
         static::bootKernel();
     }
