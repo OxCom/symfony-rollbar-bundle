@@ -19,7 +19,7 @@ matrix:
 
 before_install:
   - curl -s https://getcomposer.org/installer | php
-  - php composer.phar require symfony/symfony:${SYMFONY_VERSION} --no-update
+  - php composer.phar require symfony/symfony:~3.0 --no-update
   - php composer.phar update
 
 script:
