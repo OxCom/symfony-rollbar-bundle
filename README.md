@@ -25,13 +25,6 @@ Find all documentation here [here](https://github.com/OxCom/symfony3-rollbar-bun
                 access_token: 'some-secret-token-here'
     ```
 
-# Tests
-To run test You have to provide an access token and then run test
-```bash
-$ export ROLLBAR_ACCESS_TOKEN="token here"
-$ ./vendor/bin/phpunit -c Tests/phpunit.xml.dist
-```
-
 # TODO
 - Add integration for [Rollbar.JS](https://rollbar.com/docs/notifier/rollbar.js/) 
 - More docs
