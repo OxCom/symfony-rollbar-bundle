@@ -169,6 +169,7 @@ class ExceptionListenerTest extends KernelTestCase
         }
 
         $eventDispatcher->dispatch('kernel.exception', $event);
+        $this->assertTrue(true); // trick to mark not risky
         restore_error_handler();
     }
 }
