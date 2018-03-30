@@ -5,18 +5,18 @@ parameters:
 
 services:
   symfony_rollbar.event_listener.exception_listener:
-    class: SymfonyRollbarBundle\EventListener\ExceptionListener
+    class: "%symfony_rollbar.event_listener.exception_listener.class%"
     arguments: ["@service_container"]
     tags:
       - { name: kernel.event_listener, event: kernel.exception, priority: -100 }
 
   symfony_rollbar.event_listener.error_listener:
-    class: SymfonyRollbarBundle\EventListener\ErrorListener
+    class: "%symfony_rollbar.event_listener.error_listener.class%"
     arguments: ["@service_container"]
     tags:
       - { name: kernel.event_listener, event: kernel.exception }
 
   symfony_rollbar.provider.rollbar_handler:
     public: true
-    class: SymfonyRollbarBundle\Provider\RollbarHandler
+    class: "%symfony_rollbar.provider.rollbar_handler.class%"
     arguments: ["@service_container"]
