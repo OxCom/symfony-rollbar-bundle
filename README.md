@@ -31,5 +31,3 @@ Find all documentation here [here](https://github.com/OxCom/symfony3-rollbar-bun
 
 # Bugs and Issues
 Please, if You found a bug or something, that is not working properly, contact me and tell what's wrong. It's nice to have an example how to reproduce a bug, or any idea how to fix it in Your request. I'll take care about it ASAP.
-
-require symfony/symfony:${SYMFONY_VERSION} --no-update
