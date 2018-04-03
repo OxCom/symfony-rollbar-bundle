@@ -2,6 +2,8 @@ parameters:
   symfony_rollbar.event_listener.exception_listener.class: SymfonyRollbarBundle\EventListener\ExceptionListener
   symfony_rollbar.event_listener.error_listener.class: SymfonyRollbarBundle\EventListener\ErrorListener
   symfony_rollbar.provider.rollbar_handler.class: SymfonyRollbarBundle\Provider\RollbarHandler
+  symfony_rollbar.provider.api_client.class: SymfonyRollbarBundle\Provider\ApiClient
+  symfony_rollbar.command.deploy.class: SymfonyRollbarBundle\Command\DeployCommand
 
 services:
   symfony_rollbar.event_listener.exception_listener:
@@ -16,8 +18,19 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.exception }
 
+  symfony_rollbar.provider.api_client:
+    class: "%symfony_rollbar.provider.api_client.class%"
+    public: true
+    lazy: true
+    arguments: ["@service_container"]
+
   symfony_rollbar.provider.rollbar_handler:
     public: true
     lazy: true
     class: "%symfony_rollbar.provider.rollbar_handler.class%"
     arguments: ["@service_container"]
+
+  symfony_rollbar.command.deploy:
+        class: "%symfony_rollbar.command.deploy.class%"
+        tags:
+          - {name: console.command, command: "rollbar:deploy"}

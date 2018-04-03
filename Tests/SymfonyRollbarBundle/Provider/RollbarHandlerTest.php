@@ -2,9 +2,9 @@
 
 namespace SymfonyRollbarBundle\Tests\Provider;
 
-use Rollbar\Payload\Level;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Validator\Constraints\DateTime;
+use SymfonyRollbarBundle\Provider\RollbarHandler;
+use SymfonyRollbarBundle\Tests\Fixtures\ApiClientMock;
 use SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException;
 
 /**
@@ -24,7 +24,7 @@ class RollbarHandlerTest extends KernelTestCase
     public function testRollbarHandler()
     {
         $container = static::$kernel->getContainer();
-        $handler   = new \SymfonyRollbarBundle\Provider\RollbarHandler($container);
+        $handler   = new RollbarHandler($container);
 
         $hContainer = $handler->getContainer();
         $this->assertEquals($container, $hContainer);
@@ -39,7 +39,7 @@ class RollbarHandlerTest extends KernelTestCase
     public function testWrite($record)
     {
         $container = static::$kernel->getContainer();
-        $handler   = new \SymfonyRollbarBundle\Provider\RollbarHandler($container);
+        $handler   = new RollbarHandler($container);
 
         $property = new \ReflectionProperty($handler, 'hasRecords');
         $property->setAccessible(true);
@@ -105,7 +105,7 @@ class RollbarHandlerTest extends KernelTestCase
     public function testClose($record)
     {
         $container = static::$kernel->getContainer();
-        $handler   = new \SymfonyRollbarBundle\Provider\RollbarHandler($container);
+        $handler   = new RollbarHandler($container);
 
         $property = new \ReflectionProperty($handler, 'hasRecords');
         $property->setAccessible(true);
@@ -130,7 +130,7 @@ class RollbarHandlerTest extends KernelTestCase
     public function testShouldSkip($e, $skip)
     {
         $container = static::$kernel->getContainer();
-        $handler   = new \SymfonyRollbarBundle\Provider\RollbarHandler($container);
+        $handler   = new RollbarHandler($container);
 
         $this->assertEquals($skip, $handler->shouldSkip($e));
     }
@@ -166,7 +166,7 @@ class RollbarHandlerTest extends KernelTestCase
         ];
 
         $container = static::$kernel->getContainer();
-        $handler   = new \SymfonyRollbarBundle\Provider\RollbarHandler($container);
+        $handler   = new RollbarHandler($container);
 
         $property = new \ReflectionProperty($handler, 'hasRecords');
         $property->setAccessible(true);
@@ -177,5 +177,60 @@ class RollbarHandlerTest extends KernelTestCase
         $this->assertFalse($property->getValue($handler));
         $method->invoke($handler, $record);
         $this->assertFalse($property->getValue($handler));
+    }
+
+    /**
+     * @dataProvider generatorTrackBuildData
+     *
+     * @param string $env
+     * @param string $revision
+     * @param string $comment
+     * @param string $rollbarUser
+     * @param string $localUser
+     */
+    public function testTrackBuildPayload($env, $revision, $comment, $rollbarUser, $localUser)
+    {
+        $container = static::$kernel->getContainer();
+        $handler   = new RollbarHandler($container);
+
+        /** @var \SymfonyRollbarBundle\Tests\Fixtures\ApiClientMock $client */
+        $client = new ApiClientMock($container);
+        $container->set('symfony_rollbar.provider.api_client', $client);
+
+        // here result is payload
+        $payload = $handler->trackBuild($env, $revision, $comment, $rollbarUser, $localUser);
+
+        $this->assertEquals('SOME_ROLLBAR_ACCESS_TOKEN_123456', $payload['access_token']);
+        $this->assertEquals($env, $payload['environment']);
+        $this->assertEquals($revision, $payload['revision']);
+        $this->assertEquals($comment, $payload['comment']);
+        $this->assertEquals($rollbarUser, $payload['rollbar_username']);
+        $this->assertEquals($localUser, $payload['local_username']);
+    }
+
+    /**
+     * @return array
+     */
+    public function generatorTrackBuildData()
+    {
+        return [
+            ['test', 'R1.0.0', 'Hello', 'Rollbar', get_current_user()],
+            ['test', 'R1.0.0', 'Hello', '', get_current_user()],
+            ['test', 'R1.0.0', 'Hello', '', ''],
+            ['test', 'R1.0.0', '', '', ''],
+            ['test', 'R1.0.0', null, null, null],
+        ];
+    }
+
+    /**
+     * @covers \SymfonyRollbarBundle\Provider\ApiClient::trackBuild()
+     */
+    public function testTrackBuild()
+    {
+        $container = static::$kernel->getContainer();
+        $handler   = new RollbarHandler($container);
+
+        $this->expectException(\GuzzleHttp\Exception\ClientException::class);
+        $handler->trackBuild('test', 'R1.0.0', 'Hello', 'Rollbar', get_current_user());
     }
 }

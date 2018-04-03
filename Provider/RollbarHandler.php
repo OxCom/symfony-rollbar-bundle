@@ -6,8 +6,10 @@ use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 use Rollbar\Rollbar as RollbarNotifier;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
 use Rollbar\Payload\Level;
+use SymfonyRollbarBundle\Provider\Api\Filter;
 
 class RollbarHandler extends AbstractProcessingHandler
 {
@@ -159,5 +161,42 @@ class RollbarHandler extends AbstractProcessingHandler
     public function close()
     {
         $this->flush();
+    }
+
+    /**
+     * Track new build with Rollbar
+     *
+     * @param string $environment
+     * @param string $revision
+     * @param string $comment
+     * @param string $rollbarUser
+     * @param string $localUser
+     *
+     * @return bool
+     */
+    public function trackBuild($environment, $revision, $comment = '', $rollbarUser = '', $localUser = '')
+    {
+        // There is no API in Rollbar SDK for tracking builds
+        $config = $this->getContainer()->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
+
+        if (!$config['enable']) {
+            return false;
+        }
+
+        /** @var \SymfonyRollbarBundle\Provider\ApiClient $client */
+        $client = $this->getContainer()->get('symfony_rollbar.provider.api_client');
+
+        // truncate payload according to limits
+        $payload = [
+            'access_token'     => $config['rollbar']['access_token'],
+            'environment'      => Filter::process($environment, Filter\Length::class),
+            'revision'         => Filter::process($revision, Filter\Length::class),
+            // @link https://stackoverflow.com/questions/4420164/how-much-utf-8-text-fits-in-a-mysql-text-field
+            'comment'          => Filter::process($comment, Filter\Length::class, ['max' => 21800]),
+            'rollbar_username' => Filter::process($rollbarUser, Filter\Length::class),
+            'local_username'   => Filter::process($localUser, Filter\Length::class),
+        ];
+
+        return $client->trackBuild($payload);
     }
 }
