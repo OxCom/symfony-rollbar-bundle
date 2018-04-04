@@ -173,6 +173,7 @@ class RollbarHandlerTest extends KernelTestCase
             [$e, false],
             [new \Exception(), false],
             [new \SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException(), true],
+            [new \SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeSymfonyException(), true],
             [new \Symfony\Component\Debug\Exception\UndefinedFunctionException("error", $e), true],
             [new \TypeError("TypeError"), false],
             [new \ParseError("ParseError"), true],
