@@ -180,7 +180,7 @@ class RollbarHandler extends AbstractProcessingHandler
     {
         // check exception
         foreach ($this->exclude as $instance) {
-            if (class_exists($instance) && $exception instanceof $instance) {
+            if ((class_exists($instance) || interface_exists($instance)) && $exception instanceof $instance) {
                 return true;
             }
         }
