@@ -23,6 +23,7 @@ class ConfigurationTest extends KernelTestCase
         $exclude = Configuration::$exclude;
         $exclude[] = '\SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException';
         $exclude[] = '\ParseError';
+        $exclude[] = '\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface';
 
         $default = [
             'enable' => true,
