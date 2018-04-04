@@ -175,9 +175,9 @@ class ExceptionListenerTest extends KernelTestCase
 
     /**
      * @dataProvider generatorHandleParams
-     * @param $data
+     * @param \Throwable $data
      */
-    public function testHandleParams(\Throwable $data)
+    public function testHandleParams($data)
     {
         $container = static::$kernel->getContainer();
 
@@ -205,6 +205,7 @@ class ExceptionListenerTest extends KernelTestCase
             [new \Exception('This is new exception')],
             [new \Exception('This is one more new exception')],
             [new \TypeError('This is TypeError')],
+            [new \DivisionByZeroError('This is DivisionByZeroError')],
         ];
     }
 }
