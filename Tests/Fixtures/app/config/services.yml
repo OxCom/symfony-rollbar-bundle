@@ -1,0 +1,8 @@
+parameters:
+  symfony_rollbar.fixture.person_provider.class: \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider
+
+services:
+  symfony_rollbar.fixture.person_provider:
+    class: "%symfony_rollbar.fixture.person_provider.class%"
+    public: true
+    arguments: ["@service_container"]

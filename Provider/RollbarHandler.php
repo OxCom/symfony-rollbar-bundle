@@ -35,6 +35,11 @@ class RollbarHandler extends AbstractProcessingHandler
     protected $exclude;
 
     /**
+     * @var array
+     */
+    protected $rbConfig;
+
+    /**
      * Monolog vs Rollbar
      * @var array
      */
@@ -61,10 +66,25 @@ class RollbarHandler extends AbstractProcessingHandler
         $this->container = $container;
         parent::__construct($level, $bubble);
 
-        // init notifier
-        $config = $this->getContainer()->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
-        $kernel = $container->get('kernel');
+        $this->rbConfig = $this->initialize();
 
+        if (!empty($this->rbConfig)) {
+            RollbarNotifier::init($this->rbConfig, false, false, false);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    protected function initialize()
+    {
+        try {
+            $config = $this->getContainer()->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        $kernel   = $this->container->get('kernel');
         $rConfig  = $config['rollbar'];
         $override = [
             'root'      => $kernel->getRootDir(),
@@ -75,9 +95,24 @@ class RollbarHandler extends AbstractProcessingHandler
             $rConfig[$key] = $value;
         }
 
+        // DI for 'person_fn'
+        if (!empty($rConfig['person_fn'])) {
+            if ($this->container->has($rConfig['person_fn'])) {
+                $service = $this->container->get($rConfig['person_fn']);
+            } elseif (class_exists($rConfig['person_fn'])) {
+                $service = new $rConfig['person_fn']($this->container);
+            }
+
+            if (!empty($service) && $service instanceof AbstractPersonProvider) {
+                $rConfig['person_fn'] = [$service, 'getPerson'];
+            } else {
+                $rConfig['person_fn'] = is_callable($rConfig['person_fn']) ? $rConfig['person_fn'] : null;
+            }
+        }
+
         $this->exclude = empty($config['exclude']) ? [] : $config['exclude'];
 
-        RollbarNotifier::init($rConfig, false, false, false);
+        return $rConfig;
     }
 
     /**
@@ -93,6 +128,10 @@ class RollbarHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
+        if (empty($this->rbConfig)) {
+            return;
+        }
+
         if (!$this->initialized) {
             // __destructor() doesn't get called on Fatal errors
             register_shutdown_function([$this, 'close']);
@@ -179,9 +218,7 @@ class RollbarHandler extends AbstractProcessingHandler
     public function trackBuild($environment, $revision, $comment = '', $rollbarUser = '', $localUser = '')
     {
         // There is no API in Rollbar SDK for tracking builds
-        $config = $this->getContainer()->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
-
-        if (!$config['enable']) {
+        if (empty($this->rbConfig)) {
             return null;
         }
 
@@ -190,7 +227,7 @@ class RollbarHandler extends AbstractProcessingHandler
 
         // truncate payload according to limits
         $payload = [
-            'access_token'     => $config['rollbar']['access_token'],
+            'access_token'     => $this->rbConfig['access_token'],
             'environment'      => Filter::process($environment, Filter\Length::class),
             'revision'         => Filter::process($revision, Filter\Length::class),
             // @link https://stackoverflow.com/questions/4420164/how-much-utf-8-text-fits-in-a-mysql-text-field

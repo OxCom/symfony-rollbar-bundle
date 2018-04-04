@@ -35,6 +35,8 @@ class RollbarHandlerTest extends KernelTestCase
      * @dataProvider recordGenerator
      *
      * @param $record
+     *
+     * @throws \ReflectionException
      */
     public function testWrite($record)
     {
@@ -50,6 +52,31 @@ class RollbarHandlerTest extends KernelTestCase
         $this->assertFalse($property->getValue($handler));
         $method->invoke($handler, $record);
         $this->assertTrue($property->getValue($handler));
+    }
+
+    /**
+     * @dataProvider recordGenerator
+     *
+     * @param $record
+     *
+     * @throws \ReflectionException
+     */
+    public function testWriteDisabledRollbar($record)
+    {
+        static::bootKernel(['environment' => 'test_drb']);
+
+        $container = static::$kernel->getContainer();
+        $handler   = new RollbarHandler($container);
+
+        $property = new \ReflectionProperty($handler, 'hasRecords');
+        $property->setAccessible(true);
+
+        $method = new \ReflectionMethod($handler, 'write');
+        $method->setAccessible(true);
+
+        $this->assertFalse($property->getValue($handler));
+        $method->invoke($handler, $record);
+        $this->assertFalse($property->getValue($handler));
     }
 
     /**
@@ -234,5 +261,22 @@ class RollbarHandlerTest extends KernelTestCase
 
         $this->expectException(\GuzzleHttp\Exception\ClientException::class);
         $handler->trackBuild('test', 'R1.0.0', 'Hello', 'Rollbar', get_current_user());
+    }
+
+    /**
+     * @covers \SymfonyRollbarBundle\Provider\ApiClient::trackBuild()
+     */
+    public function testTrackBuildDisabledRollbar()
+    {
+        static::bootKernel(['environment' => 'test_drb']);
+
+        $container = static::$kernel->getContainer();
+        $handler   = new RollbarHandler($container);
+
+        $result = $handler->trackBuild('test_drb', 'R1.0.0');
+        $this->assertNull($result);
+
+        /** @var \SymfonyRollbarBundle\Provider\ApiClient $client */
+        $this->assertFalse($container->has('symfony_rollbar.provider.api_client'));
     }
 }

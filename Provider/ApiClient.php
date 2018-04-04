@@ -38,7 +38,6 @@ class ApiClient
     {
         $this->container = $container;
 
-        // There is no API in Rollbar SDK for tracking builds
         $config         = $this->container->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
         $this->endpoint = $config['rollbar']['base_api_url'];
 
@@ -57,8 +56,10 @@ class ApiClient
      */
     public function trackBuild($payload = [])
     {
-        return $this->client->post('deploy', [
+        $rsp = $this->client->post('deploy', [
             'form_params' => $payload,
         ]);
+
+        return $rsp;
     }
 }

@@ -1,6 +1,7 @@
 imports:
     - { resource: config.yml }
     - { resource: parameters.yml }
+    - { resource: services.yml }
 
 symfony_rollbar:
   enable: true
@@ -11,4 +12,4 @@ symfony_rollbar:
   rollbar:
     access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_123456'
     environment: '%kernel.environment%'
-    person_fn: \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider
+    person_fn: "symfony_rollbar.fixture.person_provider"

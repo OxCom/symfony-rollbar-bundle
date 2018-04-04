@@ -11,4 +11,4 @@ symfony_rollbar:
   rollbar:
     access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_123456'
     environment: '%kernel.environment%'
-    person_fn: \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider
+    person_fn: "get_awesome_person"

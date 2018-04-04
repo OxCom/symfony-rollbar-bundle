@@ -44,7 +44,7 @@ class ConfigurationTest extends KernelTestCase
                 'included_errno'                 => $defaultErrorMask,
                 'logger'                         => null,
                 'person'                         => [],
-                'person_fn'                      => null,
+                'person_fn'                      => '\SymfonyRollbarBundle\Tests\Fixtures\PersonProvider',
                 'root'                           => static::$kernel->getRootDir(),
                 'scrub_fields'                   => Configuration::$scrubFieldsDefault,
                 'shift_function'                 => true,
