@@ -41,11 +41,12 @@ class RollbarExtensionTest extends KernelTestCase
             $this->assertNotEmpty($list);
 
             $function = $list[0];
-            $this->assertInstanceOf(\Twig_Function::class, $function);
+            $this->assertInstanceOf(\Twig_SimpleFunction::class, $function);
 
             $output = $rollbarTwig->rollbarJs();
             $this->assertContains('_rollbarConfig', $output);
             $this->assertContains('SOME_ROLLBAR_ACCESS_TOKEN_654321', $output);
+            $this->assertContains('_rollbarConfig.rollbarJsUrl', $output);
         }
     }
 
@@ -57,7 +58,7 @@ class RollbarExtensionTest extends KernelTestCase
         return [
             // env, is-empty-functions
             ['test', false],
-//            ['test_drb', true],
+            ['test_drb', true],
         ];
     }
 }

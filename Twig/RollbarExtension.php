@@ -2,6 +2,7 @@
 
 namespace SymfonyRollbarBundle\Twig;
 
+use Rollbar\RollbarJsHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
 
@@ -43,7 +44,7 @@ class RollbarExtension extends \Twig_Extension
         }
 
         return [
-            new \Twig_Function('rollbarJs', [$this, 'rollbarJs']),
+            new \Twig_SimpleFunction('rollbarJs', [$this, 'rollbarJs']),
         ];
     }
 
@@ -52,13 +53,12 @@ class RollbarExtension extends \Twig_Extension
      */
     public function rollbarJs()
     {
-        $js = ''; // /vendor/rollbar/rollbar/data/rollbar.snippet.js
-        $script = "<script>var _rollbarConfig = {{config}};\n{{rollbar-snippet}}</script>";
-        $config = $this->config['rollbar_js'];
+        $helper = new RollbarJsHelper($this->config['rollbar_js']);
 
+        $script = "<script>var _rollbarConfig = {{config}};\n{{rollbar-snippet}}</script>";
         $script = strtr($script, [
-            '{{config}}'          => json_encode($config),
-            '{{rollbar-snippet}}' => $js,
+            '{{config}}'          => $helper->configJsTag(),
+            '{{rollbar-snippet}}' => $helper->jsSnippet(),
         ]);
 
         return $script;
