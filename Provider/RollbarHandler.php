@@ -113,7 +113,9 @@ class RollbarHandler extends AbstractProcessingHandler
             'datetime'      => $record['datetime']->format('U'),
         ]);
 
-        if (isset($context['exception']) && $context['exception'] instanceof \Exception) {
+        if (isset($context['exception'])
+            && ($context['exception'] instanceof \Exception || $context['exception'] instanceof \Throwable)
+        ) {
             $payload['level'] = $context['level'];
             $exception        = $context['exception'];
             unset($context['exception']);
@@ -131,11 +133,11 @@ class RollbarHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param \Exception $exception
+     * @param \Throwable $exception
      *
      * @return bool
      */
-    public function shouldSkip(\Exception $exception)
+    public function shouldSkip($exception)
     {
         // check exception
         foreach ($this->exclude as $instance) {
@@ -172,7 +174,7 @@ class RollbarHandler extends AbstractProcessingHandler
      * @param string $rollbarUser
      * @param string $localUser
      *
-     * @return bool
+     * @return null|\Psr\Http\Message\ResponseInterface
      */
     public function trackBuild($environment, $revision, $comment = '', $rollbarUser = '', $localUser = '')
     {
@@ -180,7 +182,7 @@ class RollbarHandler extends AbstractProcessingHandler
         $config = $this->getContainer()->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
 
         if (!$config['enable']) {
-            return false;
+            return null;
         }
 
         /** @var \SymfonyRollbarBundle\Provider\ApiClient $client */

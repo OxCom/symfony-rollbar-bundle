@@ -22,6 +22,7 @@ class ConfigurationTest extends KernelTestCase
 
         $exclude = Configuration::$exclude;
         $exclude[] = '\SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException';
+        $exclude[] = '\ParseError';
 
         $default = [
             'enable' => true,

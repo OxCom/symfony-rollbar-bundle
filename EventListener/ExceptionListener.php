@@ -42,14 +42,17 @@ class ExceptionListener extends AbstractListener
      */
     public function handleException($exception)
     {
-        if ($exception instanceof \Exception && $this->handler->shouldSkip($exception)) {
+        if (($exception instanceof \Exception || $exception instanceof \Throwable)
+            && $this->handler->shouldSkip($exception)
+        ) {
             return;
         }
 
         $payload = [];
+
         // @link http://php.net/manual/en/reserved.constants.php
         // @link http://php.net/manual/en/language.errors.php7.php
-        if (!($exception instanceof \Exception) || PHP_MAJOR_VERSION > 7 && !($exception instanceof \Throwable)) {
+        if (!$exception instanceof \Exception && !$exception instanceof \Throwable) {
             $payload   = ['message' => @serialize($exception)];
             $exception = new \Exception('Undefined exception');
         }

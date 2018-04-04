@@ -172,4 +172,39 @@ class ExceptionListenerTest extends KernelTestCase
         $this->assertTrue(true); // trick to mark not risky
         restore_error_handler();
     }
+
+    /**
+     * @dataProvider generatorHandleParams
+     * @param $data
+     */
+    public function testHandleParams(\Throwable $data)
+    {
+        $container = static::$kernel->getContainer();
+
+        $handler = new ErrorHandler();
+        $handler->setAssert(function ($record) use ($data) {
+            $this->assertNotEmpty($record);
+
+            $this->assertEquals($data->getMessage(), $record['message']);
+            $this->assertEquals(Logger::ERROR, $record['level']);
+            $this->assertNotEmpty($record['context']['exception']);
+
+            $exception = $record['context']['exception'];
+            $this->assertEquals($data, $exception);
+        });
+
+        $listener = new ExceptionListener($container);
+        $listener->getLogger()->setHandlers([$handler]);
+
+        $listener->handleException($data);
+    }
+
+    public function generatorHandleParams()
+    {
+        return [
+            [new \Exception('This is new exception')],
+            [new \Exception('This is one more new exception')],
+            [new \TypeError('This is TypeError')],
+        ];
+    }
 }

@@ -27,6 +27,8 @@ class ErrorHandler extends AbstractProcessingHandler
         }
 
         return static::$instance;
+
+
     }
 
     /**
@@ -46,10 +48,10 @@ class ErrorHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $dummy = function () {
-        };
+        if (!empty($this->assert)) {
+            $cb = $this->assert;
 
-        $closure = empty($this->assert) ? $dummy : $this->assert;
-        call_user_func($closure, $record);
+            $cb($record);
+        }
     }
 }

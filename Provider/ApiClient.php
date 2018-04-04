@@ -48,15 +48,16 @@ class ApiClient
     }
 
     /**
-     * @TODO: inject mocked clienty
+     * @TODO : inject mocked clienty
      *
      * @param array $payload
      *
      * @link https://rollbar.com/docs/api/deploys/
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function trackBuild($payload = [])
     {
-        $this->client->post('deploy', [
+        return $this->client->post('deploy', [
             'form_params' => $payload,
         ]);
     }
