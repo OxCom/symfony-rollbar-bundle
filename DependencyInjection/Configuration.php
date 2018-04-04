@@ -24,6 +24,10 @@ class Configuration implements ConfigurationInterface
     const ENVIRONMENT = 'production';
     const TIMEOUT     = 3;
 
+    const JS_ITEMS_PER_MINUTE = 60;
+    const JS_MAX_ITEMS        = 0;
+    const JS_UNCAUGHT_LEVEL   = "error";
+
     public static $scrubFieldsDefault = [
         'passwd',
         'password',
@@ -32,6 +36,14 @@ class Configuration implements ConfigurationInterface
         'password_confirmation',
         'auth_token',
         'csrf_token',
+    ];
+
+    public static $autoInstrument = [
+        'network'     => true,
+        'log'         => true,
+        'dom'         => true,
+        'navigation'  => true,
+        'connectivit' => true,
     ];
 
     /**
@@ -117,6 +129,40 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('send_message_trace')->defaultFalse()->end()
                     ->scalarNode('include_raw_request_body')->defaultFalse()->end()
                     ->scalarNode('local_vars_dump')->defaultFalse()->end()
+                    ->end()
+                ->end()
+                ->arrayNode('rollbar_js')->children()
+                    ->scalarNode('enabled')->defaultTrue()->end()
+                    ->scalarNode('accessToken')->defaultValue('')->end()
+                    ->scalarNode('captureUncaught')->defaultTrue()->end()
+                    ->scalarNode('uncaughtErrorLevel')->defaultValue(static::JS_UNCAUGHT_LEVEL)->end()
+                    ->scalarNode('captureUnhandledRejections')->defaultTrue()->end()
+                    ->arrayNode('payload')
+                        ->treatNullLike([])
+                        ->prototype('scalar')->end()
+                        ->defaultValue(["environment" => static::ENVIRONMENT])
+                        ->end()
+                    ->arrayNode('ignoredMessages')
+                        ->treatNullLike([])
+                        ->prototype('scalar')->end()
+                        ->defaultValue([])
+                        ->end()
+                    ->scalarNode('verbose')->defaultFalse()->end()
+                    ->scalarNode('async')->defaultTrue()->end()
+                    ->scalarNode('autoInstrument')->defaultTrue()->end()
+                    ->arrayNode('autoInstrument')
+                        ->treatNullLike([])
+                        ->prototype('scalar')->end()
+                        ->defaultValue(static::$autoInstrument)
+                        ->end()
+                    ->scalarNode('itemsPerMinute')->defaultValue(static::JS_ITEMS_PER_MINUTE)->end()
+                    ->scalarNode('maxItems')->defaultValue(static::JS_MAX_ITEMS)->end()
+                    ->arrayNode('scrubFields')
+                        ->treatNullLike([])
+                        ->prototype('scalar')->end()
+                        ->defaultValue(static::$scrubFieldsDefault)
+                        ->end()
+                    ->end()
                 ->end()
             ->end();
 

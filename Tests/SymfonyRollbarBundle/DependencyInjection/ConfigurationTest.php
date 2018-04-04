@@ -8,6 +8,7 @@ use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
 
 /**
  * Class ConfigurationTest
+ *
  * @package SymfonyRollbarBundle\Tests\DependencyInjection
  */
 class ConfigurationTest extends KernelTestCase
@@ -20,15 +21,15 @@ class ConfigurationTest extends KernelTestCase
         $config           = $container->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
         $defaultErrorMask = E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_USER_ERROR | E_RECOVERABLE_ERROR;
 
-        $exclude = Configuration::$exclude;
+        $exclude   = Configuration::$exclude;
         $exclude[] = '\SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException';
         $exclude[] = '\ParseError';
         $exclude[] = '\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface';
 
         $default = [
-            'enable' => true,
-            'exclude' => $exclude,
-            'rollbar' => [
+            'enable'     => true,
+            'exclude'    => $exclude,
+            'rollbar'    => [
                 'access_token'                   => 'SOME_ROLLBAR_ACCESS_TOKEN_123456',
                 'agent_log_location'             => static::$kernel->getLogDir() . '/rollbar.log',
                 'base_api_url'                   => 'https://api.rollbar.com/api/1/',
@@ -65,6 +66,21 @@ class ConfigurationTest extends KernelTestCase
                 'send_message_trace'             => false,
                 'include_raw_request_body'       => false,
                 'local_vars_dump'                => false,
+            ],
+            'rollbar_js' => [
+                'accessToken'                => 'SOME_ROLLBAR_ACCESS_TOKEN_654321',
+                'payload'                    => ['environment' => static::$kernel->getEnvironment()],
+                'enabled'                    => true,
+                'captureUncaught'            => true,
+                'uncaughtErrorLevel'         => Configuration::JS_UNCAUGHT_LEVEL,
+                'captureUnhandledRejections' => true,
+                'ignoredMessages'            => [],
+                'verbose'                    => false,
+                'async'                      => true,
+                'autoInstrument'             => Configuration::$autoInstrument,
+                'itemsPerMinute'             => Configuration::JS_ITEMS_PER_MINUTE,
+                'maxItems'                   => Configuration::JS_MAX_ITEMS,
+                'scrubFields'                => Configuration::$scrubFieldsDefault,
             ],
         ];
 

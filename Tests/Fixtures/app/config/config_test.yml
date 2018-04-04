@@ -13,3 +13,8 @@ symfony_rollbar:
     access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_123456'
     environment: '%kernel.environment%'
     person_fn: \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider
+
+  rollbar_js:
+    accessToken: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'
+    payload:
+      environment: '%kernel.environment%'
