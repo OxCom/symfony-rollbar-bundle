@@ -28,7 +28,11 @@ class RollbarExtension extends \Twig_Extension
         $this->container = $container;
 
         try {
-            $this->config = $container->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
+            $config = $container->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
+
+            if (!empty($config['rollbar_js']['enabled'])) {
+                $this->config = $config;
+            }
         } catch (\Exception $e) {
             return null;
         }

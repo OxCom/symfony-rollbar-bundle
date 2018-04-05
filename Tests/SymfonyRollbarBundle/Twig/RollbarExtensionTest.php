@@ -59,6 +59,7 @@ class RollbarExtensionTest extends KernelTestCase
             // env, is-empty-functions
             ['test', false],
             ['test_drb', true],
+            ['test_drbj', true],
         ];
     }
 }

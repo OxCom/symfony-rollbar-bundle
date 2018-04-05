@@ -47,6 +47,26 @@ Simple configuration of bundle:
             send_message_trace: false
             include_raw_request_body: false
             local_vars_dump: false
+        rollbar_js:
+            enabled: true
+            accessToken: 'some-public-token'
+            captureUncaught: true
+            uncaughtErrorLevel: 'error'
+            captureUnhandledRejections: true
+            payload:
+                environment: environment: '%kernel.environment%'
+            ignoredMessages: []
+            verbose: false
+            async: true
+            autoInstrument:
+                network: true
+                log: true
+                dom: true
+                navigation: true
+                connectivity: true
+            itemsPerMinute: 60
+            maxItems: 0
+            scrubFields: ['passwd', 'password', 'secret', 'confirm_password', 'password_confirmation', 'auth_token', 'csrf_token']
 
 Bundle configuration
 --------------------
@@ -61,7 +81,7 @@ in `official documentation`_ for Rollbar PHP lib.
 .. _`official documentation`: https://rollbar.com/docs/notifier/rollbar-php/
 
 RollBar - Settings
---------------------
+------------------
 
 Here you can description of some important configuration options for RollBar.
 
@@ -75,7 +95,7 @@ Here you can description of some important configuration options for RollBar.
 
 
 RollBar - Person Tracking
---------------------
+-------------------------
 Rollbar `can track`_ which of your People (users) are affected by each error. There is one of the options:
 
 ``person_fn``: A function reference (string, etc. - anything that `call_user_func()`_ can handle) returning an array like the one for 'person'.
@@ -122,3 +142,11 @@ Than in your ``PersonProvider`` class/service or function you have to return use
 
 .. _`can track`: https://rollbar.com/docs/person-tracking/
 .. _`call_user_func()`: http://php.net/call_user_func
+
+RollBarJS - Integration
+-----------------------
+It's possible to use `Rollbar for JavaScript`_ integration in your project. The basic configuration is assailable in configuration for current bundle.
+
+Inject following ``{{ rollbarJs() }}`` code into the <head> of every page you want to monitor. It should be as high as possible, before any other <script> tags.
+
+.. _`Rollbar for JavaScript`: https://rollbar.com/docs/notifier/rollbar.js/

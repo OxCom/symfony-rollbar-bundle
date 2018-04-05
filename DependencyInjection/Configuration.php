@@ -39,11 +39,11 @@ class Configuration implements ConfigurationInterface
     ];
 
     public static $autoInstrument = [
-        'network'     => true,
-        'log'         => true,
-        'dom'         => true,
-        'navigation'  => true,
-        'connectivit' => true,
+        'network'      => true,
+        'log'          => true,
+        'dom'          => true,
+        'navigation'   => true,
+        'connectivity' => true,
     ];
 
     /**
@@ -149,7 +149,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->scalarNode('verbose')->defaultFalse()->end()
                     ->scalarNode('async')->defaultTrue()->end()
-                    ->scalarNode('autoInstrument')->defaultTrue()->end()
                     ->arrayNode('autoInstrument')
                         ->treatNullLike([])
                         ->prototype('scalar')->end()
