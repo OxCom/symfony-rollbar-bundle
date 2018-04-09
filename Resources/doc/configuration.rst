@@ -93,6 +93,38 @@ Here you can description of some important configuration options for RollBar.
  
 ``root``: Path to your project's root dir. Default ``%kernel.root_dir%``
 
+``checkIgnore``: Function called before sending payload to Rollbar, return true to stop the error from being sent to Rollbar.
+
+Use globally defined function:
+
+.. code-block:: yaml
+
+    symfony_rollbar:
+        # ...
+        rollbar:
+            # ...
+            checkIgnore: 'function_name_here'
+
+Use custom ``CheckIgnoreProvider`` class that should implements ``InterfaceCheckIgnore``:
+
+.. code-block:: yaml
+
+    symfony_rollbar:
+        # ...
+        rollbar:
+            # ...
+            checkIgnore: '\SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider'
+
+Use custom ``CheckIgnoreProvider`` service that class should implements ``InterfaceCheckIgnore``:
+
+.. code-block:: yaml
+
+    symfony_rollbar:
+        # ...
+        rollbar:
+            # ...
+            checkIgnore: 'awesome_app.rollbar_check_ignore_provider'
+
 
 RollBar - Person Tracking
 -------------------------
