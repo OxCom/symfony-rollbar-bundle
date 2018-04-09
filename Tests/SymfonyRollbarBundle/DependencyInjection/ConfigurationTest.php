@@ -35,7 +35,7 @@ class ConfigurationTest extends KernelTestCase
                 'base_api_url'                   => 'https://api.rollbar.com/api/1/',
                 'branch'                         => Configuration::BRANCH,
                 'capture_error_stacktraces'      => true,
-                'checkIgnore'                    => null,
+                'checkIgnore'                    => '\SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider',
                 'code_version'                   => '',
                 'enable_utf8_sanitization'       => true,
                 'environment'                    => static::$kernel->getEnvironment(),

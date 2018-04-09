@@ -40,6 +40,16 @@ class RollbarHandler extends AbstractProcessingHandler
     protected $rbConfig;
 
     /**
+     * List of configuration options where we have to try to inject services
+     * @var array
+     */
+    protected $injectServices = [
+        // config option, method
+        'person_fn'   => 'getPerson',
+        'checkIgnore' => 'checkIgnore',
+    ];
+
+    /**
      * Monolog vs Rollbar
      * @var array
      */
@@ -95,24 +105,40 @@ class RollbarHandler extends AbstractProcessingHandler
             $rConfig[$key] = $value;
         }
 
-        // DI for 'person_fn'
-        if (!empty($rConfig['person_fn'])) {
-            if ($this->container->has($rConfig['person_fn'])) {
-                $service = $this->container->get($rConfig['person_fn']);
-            } elseif (class_exists($rConfig['person_fn'])) {
-                $service = new $rConfig['person_fn']($this->container);
+        foreach ($this->injectServices as $option => $method) {
+            if (empty($rConfig[$option])) {
+                continue;
             }
 
-            if (!empty($service) && $service instanceof AbstractPersonProvider) {
-                $rConfig['person_fn'] = [$service, 'getPerson'];
-            } else {
-                $rConfig['person_fn'] = is_callable($rConfig['person_fn']) ? $rConfig['person_fn'] : null;
-            }
+            $rConfig[$option] = $this->injectService($rConfig[$option], $method);
         }
 
         $this->exclude = empty($config['exclude']) ? [] : $config['exclude'];
 
         return $rConfig;
+    }
+
+    /**
+     * Inject service into configuration
+     *
+     * @param string $name
+     * @param string $method
+     *
+     * @return array|callable|null
+     */
+    protected function injectService($name, $method)
+    {
+        if ($this->container->has($name)) {
+            $service = $this->container->get($name);
+        } elseif (class_exists($name)) {
+            $service = new $name($this->container);
+        }
+
+        if (!empty($service) && method_exists($service, $method)) {
+            return [$service, $method];
+        } else {
+            return is_callable($name) ? $name : null;
+        }
     }
 
     /**

@@ -61,18 +61,18 @@ class PersonProviderTest extends KernelTestCase
         return [
             ['test', null],
             ['test', new AwesomePerson('person_id_1', 'username', 'email')],
-            ['test_ps', null],
-            ['test_ps', new AwesomePerson('person_id_2', 'username', 'email')],
+            ['test_is', null],
+            ['test_is', new AwesomePerson('person_id_2', 'username', 'email')],
         ];
     }
 
     /**
      * @throws \ReflectionException
      */
-    public function testProviderFunction()
+    public function testPersonProviderFunction()
     {
-        include_once __DIR__ . '/../../Fixtures/global_person_fn.php';
-        static::bootKernel(['environment' => 'test_pf']);
+        include_once __DIR__ . '/../../Fixtures/global_fn.php';
+        static::bootKernel(['environment' => 'test_if']);
 
         $container = static::$kernel->getContainer();
         $handler   = new RollbarHandler($container);

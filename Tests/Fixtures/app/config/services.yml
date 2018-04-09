@@ -1,8 +1,13 @@
 parameters:
   symfony_rollbar.fixture.person_provider.class: \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider
+  symfony_rollbar.fixture.check_ignore_provider.class: \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider
 
 services:
   symfony_rollbar.fixture.person_provider:
     class: "%symfony_rollbar.fixture.person_provider.class%"
     public: true
     arguments: ["@service_container"]
+
+  symfony_rollbar.fixture.check_ignore_provider:
+      class: "%symfony_rollbar.fixture.check_ignore_provider.class%"
+      public: true
