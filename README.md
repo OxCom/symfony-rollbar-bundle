@@ -1,13 +1,13 @@
 # SymfonyRollbar bundle for Symfony Framework
 [![Latest Stable Version](https://poser.pugx.org/oxcom/symfony-rollbar-bundle/v/stable)](https://packagist.org/packages/oxcom/symfony-rollbar-bundle)
 [![Total Downloads](https://poser.pugx.org/oxcom/symfony-rollbar-bundle/downloads)](https://packagist.org/packages/oxcom/symfony-rollbar-bundle)
-[![codecov](https://codecov.io/gh/OxCom/symfony3-rollbar-bundle/branch/master/graph/badge.svg)](https://codecov.io/gh/OxCom/symfony3-rollbar-bundle)
-[![Build Status](https://travis-ci.org/OxCom/symfony3-rollbar-bundle.svg?branch=master)](https://travis-ci.org/OxCom/symfony3-rollbar-bundle)
+[![codecov](https://codecov.io/gh/OxCom/symfony-rollbar-bundle/branch/master/graph/badge.svg)](https://codecov.io/gh/OxCom/symfony-rollbar-bundle)
+[![Build Status](https://travis-ci.org/OxCom/symfony-rollbar-bundle.svg?branch=master)](https://travis-ci.org/OxCom/symfony-rollbar-bundle)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
 Bundle for Symfony Framework (v2.8.x, 3.x, 4.x) that integrates Rollbar tracker
 
-Find all documentation here [here](https://github.com/OxCom/symfony3-rollbar-bundle/tree/master/Resources/doc)
+Find all documentation here [here](https://github.com/OxCom/symfony-rollbar-bundle/tree/master/Resources/doc)
 
 # Install
 1. Add bundle as dependency
