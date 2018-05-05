@@ -79,6 +79,8 @@ class ExceptionListenerTest extends KernelTestCase
              * @var AbstractListener $listener
              */
             if (!$listener[0] instanceof AbstractListener) {
+                // disable default symfony listeners
+                $eventDispatcher->removeListener('kernel.exception', $listener);
                 continue;
             }
 
@@ -162,6 +164,8 @@ class ExceptionListenerTest extends KernelTestCase
              * @var AbstractListener $listener
              */
             if (!$listener[0] instanceof AbstractListener) {
+                // disable default symfony listeners
+                $eventDispatcher->removeListener('kernel.exception', $listener);
                 continue;
             }
 

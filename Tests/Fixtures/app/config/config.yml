@@ -4,7 +4,7 @@ parameters:
     locale: ~
 
 framework:
-    secret:          "%secret%"
+    secret: "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
