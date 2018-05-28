@@ -26,7 +26,7 @@ matrix:
 before_install:
   - curl -s https://getcomposer.org/installer | php
   - php composer.phar require symfony/symfony:${SYMFONY_VERSION} --no-update
-  - php composer.phar update
+  - php -dmemory_limit=-1 composer.phar update
 
 script:
   - php -v
