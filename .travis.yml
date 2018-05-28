@@ -29,6 +29,7 @@ before_install:
   - php -dmemory_limit=-1 composer.phar update
 
 script:
+  - cat composer.json | grep symfony\/symfony
   - php -v
   - ./vendor/bin/phpcs --standard=psr2 DependencyInjection/ EventListener/ Provider/ Tests/SymfonyRollbarBundle
   - ./vendor/bin/phpunit -c Tests/phpunit.xml.dist
