@@ -48,7 +48,9 @@ class RollbarExtension extends \Twig_Extension
         }
 
         return [
-            new \Twig_SimpleFunction('rollbarJs', [$this, 'rollbarJs']),
+            new \Twig_SimpleFunction('rollbarJs', [$this, 'rollbarJs'], [
+                'is_safe' => ['html'],
+            ]),
         ];
     }
 
@@ -59,7 +61,7 @@ class RollbarExtension extends \Twig_Extension
     {
         $helper = new RollbarJsHelper($this->config['rollbar_js']);
 
-        $script = "<script>var _rollbarConfig = {{config}};\n{{rollbar-snippet}}</script>";
+        $script = "<script>{{config}};\n{{rollbar-snippet}}</script>";
         $script = strtr($script, [
             '{{config}}'          => $helper->configJsTag(),
             '{{rollbar-snippet}}' => $helper->jsSnippet(),
