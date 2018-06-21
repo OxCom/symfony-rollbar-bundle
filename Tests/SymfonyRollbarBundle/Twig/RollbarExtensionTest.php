@@ -44,6 +44,8 @@ class RollbarExtensionTest extends KernelTestCase
             $this->assertInstanceOf(\Twig_SimpleFunction::class, $function);
 
             $output = $rollbarTwig->rollbarJs();
+
+            $this->assertNotContains('var _rollbarConfig = var _rollbarConfig', $output);
             $this->assertContains('_rollbarConfig', $output);
             $this->assertContains('SOME_ROLLBAR_ACCESS_TOKEN_654321', $output);
             $this->assertContains('_rollbarConfig.rollbarJsUrl', $output);
