@@ -40,4 +40,4 @@ services:
     class: "%symfony_rollbar.twig.extension.class%"
     arguments: ["@service_container"]
     tags:
-      - { name: twig.runtime }
+      - { name: twig.extension }
