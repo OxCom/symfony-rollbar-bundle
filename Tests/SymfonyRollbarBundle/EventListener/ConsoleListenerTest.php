@@ -91,14 +91,14 @@ class ConsoleListenerTest extends KernelTestCase
      */
     public function provideLegacyEvents()
     {
-        $input  = new ArrayInput([]);
+        $input = new ArrayInput([]);
         $output = new StreamOutput(
             fopen('php://memory', 'w', false),
             OutputInterface::VERBOSITY_QUIET,
             false
         );
 
-        $error   = new \Exception('This is console exception');
+        $error = new \Exception('This is console exception');
         $command = new DeployCommand();
 
         $events = [];
@@ -112,7 +112,6 @@ class ConsoleListenerTest extends KernelTestCase
                 $events[] = [$error, new ConsoleExceptionEvent($command, $input, $output, $error, 1)];
             }
         }
-
 
         return $events;
     }
