@@ -6,6 +6,8 @@
          backupGlobals="false"
          colors="true"
          convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
          bootstrap="./Tests/Fixtures/app/autoload.php"
 >
     <listeners>

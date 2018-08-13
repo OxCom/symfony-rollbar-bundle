@@ -2,6 +2,7 @@
 
 namespace SymfonyRollbarBundle\EventListener;
 
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
