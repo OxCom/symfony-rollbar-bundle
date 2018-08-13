@@ -6,7 +6,7 @@
          backupGlobals="false"
          colors="true"
          convertErrorsToExceptions="true"
-         bootstrap="./Fixtures/app/autoload.php"
+         bootstrap="./Tests/Fixtures/app/autoload.php"
 >
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
@@ -21,23 +21,23 @@
 
     <testsuites>
         <testsuite name="Project Test Suite">
-            <directory>SymfonyRollbarBundle</directory>
+            <directory>Tests/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./../</directory>
+            <directory>./</directory>
             <exclude>
-                <directory>./../Resources</directory>
-                <directory>./../Tests</directory>
-                <directory>./../vendor</directory>
+                <directory>./Resources</directory>
+                <directory>./Tests</directory>
+                <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>
     <logging>
         <log type="coverage-html"
-             target="./../coverage"
+             target="./coverage"
              lowUpperBound="35"
              highLowerBound="70" />
         <log type="coverage-clover" target="../clover.xml" />

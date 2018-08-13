@@ -2,6 +2,7 @@
 namespace SymfonyRollbarBundle\Tests\EventListener;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
 use Symfony\Component\HttpKernel\KernelEvents;
 use SymfonyRollbarBundle\EventListener\AbstractListener;
@@ -49,8 +50,17 @@ class AbstractListenerTest extends KernelTestCase
         $listener  = new $class($container);
 
         $expect = [
-            KernelEvents::EXCEPTION => ['onKernelException', 1],
+            KernelEvents::EXCEPTION => ['onKernelException', -100],
         ];
+
+        if (class_exists('Symfony\Component\Console\ConsoleEvents')) {
+            $key = class_exists('Symfony\Component\Console\Event\ConsoleErrorEvent')
+                ? ConsoleEvents::ERROR
+                : ConsoleEvents::EXCEPTION;
+
+            $expect[$key] = ['onConsoleError', -100];
+        }
+
         $list = $listener::getSubscribedEvents();
 
         $this->assertEquals($expect, $list);
