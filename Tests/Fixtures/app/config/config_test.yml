@@ -1,21 +1,26 @@
 imports:
-    - { resource: config.yml }
-    - { resource: parameters.yml }
+- { resource: config.yml }
+- { resource: parameters.yml }
 
 symfony_rollbar:
-  enable: true
-  exclude:
-      - \Symfony\Component\Debug\Exception\FatalErrorException
-      - \SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException
-      - \ParseError
-      - \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface
-  rollbar:
-    access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_123456'
-    environment: '%kernel.environment%'
-    person_fn: \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider
-    checkIgnore: \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider
+    enable: true
+    exclude:
+    - \Symfony\Component\Debug\Exception\FatalErrorException
+    - \SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException
+    - \ParseError
+    - \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface
+    rollbar:
+        access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_123456'
+        environment: '%kernel.environment%'
+        person_fn: \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider
+        checkIgnore: \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider
+        exception_sample_rates:
+        -   \Symfony\Component\Security\Core\Exception\AccessDeniedException: 0.1
+        -   \Symfony\Component\HttpKernel\Exception\NotFoundHttpException: 0.5
+        -   \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: 0.5
+        -   \Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException: 1
 
-  rollbar_js:
-    accessToken: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'
-    payload:
-      environment: '%kernel.environment%'
+    rollbar_js:
+        accessToken: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'
+        payload:
+            environment: '%kernel.environment%'

@@ -26,13 +26,28 @@ class ConfigurationTest extends KernelTestCase
         $exclude[] = '\ParseError';
         $exclude[] = '\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface';
 
+        $exceptionRates = [
+            '\Symfony\Component\Security\Core\Exception\AccessDeniedException'                      => [
+                'rate' => 0.1,
+            ],
+            '\Symfony\Component\HttpKernel\Exception\NotFoundHttpException'                         => [
+                'rate' => 0.5,
+            ],
+            '\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException'                     => [
+                'rate' => 0.5,
+            ],
+            '\Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException' => [
+                'rate' => 1,
+            ],
+        ];
+
         $default = [
             'enable'     => true,
             'exclude'    => $exclude,
             'rollbar'    => [
                 'access_token'                   => 'SOME_ROLLBAR_ACCESS_TOKEN_123456',
                 'agent_log_location'             => static::$kernel->getLogDir() . '/rollbar.log',
-                'base_api_url'                   => 'https://api.rollbar.com/api/1/',
+                'base_api_url'                   => Configuration::API_ENDPOINT,
                 'branch'                         => Configuration::BRANCH,
                 'capture_error_stacktraces'      => true,
                 'checkIgnore'                    => '\SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider',
@@ -55,9 +70,9 @@ class ConfigurationTest extends KernelTestCase
                 'use_error_reporting'            => false,
                 'proxy'                          => null,
                 'allow_exec'                     => true,
-                'endpoint'                       => 'https://api.rollbar.com/api/1/',
+                'endpoint'                       => Configuration::API_ENDPOINT,
                 'custom'                         => [],
-                'exception_sample_rates'         => [],
+                'exception_sample_rates'         => $exceptionRates,
                 'fluent_host'                    => '127.0.0.1',
                 'fluent_port'                    => 24224,
                 'fluent_tag'                     => 'rollbar',

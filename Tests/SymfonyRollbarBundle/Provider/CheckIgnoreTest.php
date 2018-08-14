@@ -35,7 +35,7 @@ class CheckIgnoreTest extends KernelTestCase
         $this->assertNotEmpty($config['checkIgnore']);
 
         $call = $config['checkIgnore'];
-        $this->assertEquals(2, count($call), "The 'checkIgnore' should contains 2 elements");
+        $this->assertCount(2, $call, "The 'checkIgnore' should contains 2 elements");
 
         /** @var \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider $service */
         $service = $call[0];

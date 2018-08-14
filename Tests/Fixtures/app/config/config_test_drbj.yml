@@ -1,19 +1,19 @@
 imports:
-    - { resource: config.yml }
-    - { resource: parameters.yml }
+- { resource: config.yml }
+- { resource: parameters.yml }
 
 symfony_rollbar:
-  enable: true
-  exclude:
-      - \Symfony\Component\Debug\Exception\FatalErrorException
-      - \SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException
-      - \ParseError
-  rollbar:
-    access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_123456'
-    environment: '%kernel.environment%'
+    enable: true
+    exclude:
+    - \Symfony\Component\Debug\Exception\FatalErrorException
+    - \SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException
+    - \ParseError
+    rollbar:
+        access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_123456'
+        environment: '%kernel.environment%'
 
-  rollbar_js:
-    enabled: false
-    accessToken: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'
-    payload:
-      environment: '%kernel.environment%'
+    rollbar_js:
+        enabled: false
+        accessToken: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'
+        payload:
+            environment: '%kernel.environment%'

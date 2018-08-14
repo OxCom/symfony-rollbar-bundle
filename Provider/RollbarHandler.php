@@ -96,6 +96,8 @@ class RollbarHandler extends AbstractProcessingHandler
 
         $kernel   = $this->container->get('kernel');
         $rConfig  = $config['rollbar'];
+
+        // override specific values
         $override = [
             'root'      => $kernel->getRootDir(),
             'framework' => 'Symfony ' . \Symfony\Component\HttpKernel\Kernel::VERSION,
@@ -105,12 +107,28 @@ class RollbarHandler extends AbstractProcessingHandler
             $rConfig[$key] = $value;
         }
 
+        // inject services
         foreach ($this->injectServices as $option => $method) {
             if (empty($rConfig[$option])) {
                 continue;
             }
 
             $rConfig[$option] = $this->injectService($rConfig[$option], $method);
+        }
+
+        // map rates fields
+        $map = [
+            'exception_sample_rates',
+            'error_sample_rates',
+        ];
+
+        foreach ($map as $key) {
+            $rConfig[$key] = \array_map(function($data) {
+                return empty($data['rate']) ? null : $data['rate'];
+            }, $rConfig[$key]);
+
+            // drop empty values
+            $rConfig[$key] = \array_filter($rConfig[$key]);
         }
 
         $this->exclude = empty($config['exclude']) ? [] : $config['exclude'];

@@ -24,6 +24,8 @@ class Configuration implements ConfigurationInterface
     const ENVIRONMENT = 'production';
     const TIMEOUT     = 3;
 
+    const API_ENDPOINT = 'https://api.rollbar.com/api/1/';
+
     const JS_ITEMS_PER_MINUTE = 60;
     const JS_MAX_ITEMS        = 0;
     const JS_UNCAUGHT_LEVEL   = "error";
@@ -80,8 +82,8 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue('%kernel.logs_dir%/rollbar.log')
                         ->end()
                         ->booleanNode('allow_exec')->defaultTrue()->end()
-                        ->scalarNode('endpoint')->defaultValue('https://api.rollbar.com/api/1/')->end()
-                        ->scalarNode('base_api_url')->defaultValue('https://api.rollbar.com/api/1/')->end()
+                        ->scalarNode('endpoint')->defaultValue(static::API_ENDPOINT)->end()
+                        ->scalarNode('base_api_url')->defaultValue(static::API_ENDPOINT)->end()
                         ->scalarNode('branch')->defaultValue(static::BRANCH)->end()
                         ->booleanNode('capture_error_stacktraces')->defaultTrue()->end()
                         ->scalarNode('checkIgnore')->defaultNull()->end()
@@ -100,7 +102,26 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->arrayNode('exception_sample_rates')
                             ->treatNullLike([])
-                            ->prototype('scalar')->end()
+                            ->beforeNormalization()
+                                ->always(function($values) {
+                                    $result = [];
+
+                                    foreach ($values as $value) {
+                                        foreach ($value as $class => $rate) {
+                                            $result[] = ['class' => $class, 'rate' => $rate];
+                                        }
+                                    }
+
+                                    return $result;
+                                })
+                            ->end()
+                            ->useAttributeAsKey('class')
+                            ->arrayPrototype()
+                                ->children()
+                                    ->scalarNode('class')->end()
+                                    ->floatNode('rate')->end()
+                                ->end()
+                            ->end()
                             ->defaultValue([])
                             ->end()
                         ->scalarNode('fluent_host')->defaultValue(static::FLUENT_HOST)->end()
