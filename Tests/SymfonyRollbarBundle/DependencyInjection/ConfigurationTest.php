@@ -27,24 +27,21 @@ class ConfigurationTest extends KernelTestCase
         $exclude[] = '\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface';
 
         $errorRates = [
-            'E_NOTICE'      => ['rate' => 0.1],
-            'E_USER_ERROR'  => ['rate' => 0.5],
-            'E_USER_NOTICE' => ['rate' => 0.1],
+            'E_NOTICE'      => 0.1,
+            'E_USER_ERROR'  => 0.5,
+            'E_USER_NOTICE' => 0.1,
         ];
 
         $exceptionRates = [
-            '\Symfony\Component\Security\Core\Exception\AccessDeniedException'                      => [
-                'rate' => 0.1,
-            ],
-            '\Symfony\Component\HttpKernel\Exception\NotFoundHttpException'                         => [
-                'rate' => 0.5,
-            ],
-            '\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException'                     => [
-                'rate' => 0.5,
-            ],
-            '\Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException' => [
-                'rate' => 1,
-            ],
+            '\Symfony\Component\Security\Core\Exception\AccessDeniedException'                      => 0.1,
+            '\Symfony\Component\HttpKernel\Exception\NotFoundHttpException'                         => 0.5,
+            '\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException'                     => 0.5,
+            '\Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException' => 1,
+        ];
+
+        $custom = [
+            'hello' => 'world',
+            'key'   => 'value',
         ];
 
         $default = [
@@ -77,7 +74,7 @@ class ConfigurationTest extends KernelTestCase
                 'proxy'                          => null,
                 'allow_exec'                     => true,
                 'endpoint'                       => Configuration::API_ENDPOINT,
-                'custom'                         => [],
+                'custom'                         => $custom,
                 'exception_sample_rates'         => $exceptionRates,
                 'fluent_host'                    => '127.0.0.1',
                 'fluent_port'                    => 24224,

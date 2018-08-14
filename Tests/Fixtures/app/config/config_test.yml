@@ -14,15 +14,18 @@ symfony_rollbar:
         environment: '%kernel.environment%'
         person_fn: \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider
         checkIgnore: \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider
+        custom:
+        - {key: hello, value: world}
+        - {key: key, value: value}
         exception_sample_rates:
-        - {class: \Symfony\Component\Security\Core\Exception\AccessDeniedException, rate: 0.1}
-        - {class: \Symfony\Component\HttpKernel\Exception\NotFoundHttpException, rate: 0.5}
-        - {class: \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException, rate: 0.5}
-        - {class: \Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException, rate: 1}
+        - {key: \Symfony\Component\Security\Core\Exception\AccessDeniedException, value: 0.1}
+        - {key: \Symfony\Component\HttpKernel\Exception\NotFoundHttpException, value: 0.5}
+        - {key: \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException, value: 0.5}
+        - {key: \Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException, value: 1}
         error_sample_rates:
-        - {type: E_NOTICE, rate: 0.1}
-        - {type: E_USER_ERROR, rate: 0.5}
-        - {type: E_USER_NOTICE, rate: 0.1}
+        - {key: E_NOTICE, value: 0.1}
+        - {key: E_USER_ERROR, value: 0.5}
+        - {key: E_USER_NOTICE, value: 0.1}
 
     rollbar_js:
         accessToken: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'

@@ -3,6 +3,7 @@
 namespace SymfonyRollbarBundle\Tests\Provider;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use SymfonyRollbarBundle\DependencyInjection\Configuration;
 use SymfonyRollbarBundle\Provider\RollbarHandler;
 use SymfonyRollbarBundle\Tests\Fixtures\ApiClientMock;
 use SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException;
@@ -279,5 +280,87 @@ class RollbarHandlerTest extends KernelTestCase
 
         /** @var \SymfonyRollbarBundle\Provider\ApiClient $client */
         $this->assertFalse($container->has('symfony_rollbar.provider.api_client'));
+    }
+
+    public function testInitialize()
+    {
+        $container = static::$kernel->getContainer();
+
+        $mock = $this->createMock(RollbarHandler::class);
+
+        $mock->method('getContainer')
+            ->willReturn($container);
+
+        $method = new \ReflectionMethod($mock, 'initialize');
+        $method->setAccessible(true);
+        $config = $method->invoke($mock);
+
+        $defaultErrorMask = E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_USER_ERROR | E_RECOVERABLE_ERROR;
+
+        $errorRates = [
+            E_NOTICE      => 0.1,
+            E_USER_ERROR  => 0.5,
+            E_USER_NOTICE => 0.1,
+        ];
+
+        $exceptionRates = [
+            '\Symfony\Component\Security\Core\Exception\AccessDeniedException'                      => 0.1,
+            '\Symfony\Component\HttpKernel\Exception\NotFoundHttpException'                         => 0.5,
+            '\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException'                     => 0.5,
+            '\Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException' => 1,
+        ];
+
+        $custom = [
+            'hello' => 'world',
+            'key'   => 'value',
+        ];
+
+        $default = [
+            'access_token'                   => 'SOME_ROLLBAR_ACCESS_TOKEN_123456',
+            'agent_log_location'             => static::$kernel->getLogDir() . '/rollbar.log',
+            'base_api_url'                   => Configuration::API_ENDPOINT,
+            'branch'                         => Configuration::BRANCH,
+            'capture_error_stacktraces'      => true,
+            'checkIgnore'                    => [
+                new \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider(),
+                'checkIgnore',
+            ],
+            'code_version'                   => '',
+            'enable_utf8_sanitization'       => true,
+            'environment'                    => static::$kernel->getEnvironment(),
+            'error_sample_rates'             => $errorRates,
+            'handler'                        => Configuration::HANDLER_BLOCKING,
+            'include_error_code_context'     => false,
+            'include_exception_code_context' => false,
+            'included_errno'                 => $defaultErrorMask,
+            'logger'                         => null,
+            'person'                         => [],
+            'person_fn'                      => [
+                new \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider($container),
+                'getPerson',
+            ],
+            'root'                           => static::$kernel->getRootDir(),
+            'scrub_fields'                   => Configuration::$scrubFieldsDefault,
+            'shift_function'                 => true,
+            'timeout'                        => 3,
+            'report_suppressed'              => false,
+            'use_error_reporting'            => false,
+            'proxy'                          => null,
+            'allow_exec'                     => true,
+            'endpoint'                       => Configuration::API_ENDPOINT,
+            'custom'                         => $custom,
+            'exception_sample_rates'         => $exceptionRates,
+            'fluent_host'                    => '127.0.0.1',
+            'fluent_port'                    => 24224,
+            'fluent_tag'                     => 'rollbar',
+            'host'                           => null,
+            'scrub_whitelist'                => null,
+            'send_message_trace'             => false,
+            'include_raw_request_body'       => false,
+            'local_vars_dump'                => false,
+            'framework'                      => 'Symfony ' . \Symfony\Component\HttpKernel\Kernel::VERSION,
+        ];
+
+        $this->assertEquals($default, $config);
     }
 }

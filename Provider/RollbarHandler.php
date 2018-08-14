@@ -88,13 +88,15 @@ class RollbarHandler extends AbstractProcessingHandler
      */
     protected function initialize()
     {
+        $container = $this->getContainer();
+
         try {
-            $config = $this->getContainer()->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
+            $config = $container->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
         } catch (\Exception $e) {
             return null;
         }
 
-        $kernel   = $this->container->get('kernel');
+        $kernel   = $container->get('kernel');
         $rConfig  = $config['rollbar'];
 
         // override specific values
@@ -116,23 +118,29 @@ class RollbarHandler extends AbstractProcessingHandler
             $rConfig[$option] = $this->injectService($rConfig[$option], $method);
         }
 
-        // map rates fields
-        $key           = 'exception_sample_rates';
-        $rConfig[$key] = \array_map(function ($data) {
-            return empty($data['rate']) ? null : $data['rate'];
-        }, $rConfig[$key]);
-        $rConfig[$key] = \array_filter($rConfig[$key]);
+        $rConfig = $this->mapConfigValues($rConfig);
 
+        $this->exclude = empty($config['exclude']) ? [] : $config['exclude'];
+
+        return $rConfig;
+    }
+
+    /**
+     * Map specific fields in configurations fields
+     *
+     * @param array $rConfig
+     * @return array
+     */
+    protected function mapConfigValues($rConfig)
+    {
         $key = 'error_sample_rates';
-        foreach ($rConfig[$key] as $const => $data) {
+        foreach ($rConfig[$key] as $const => $value) {
             $newKey = constant($const);
             unset($rConfig[$key][$const]);
 
-            $rConfig[$key][$newKey] = empty($data['rate']) ? null : $data['rate'];
+            $rConfig[$key][$newKey] = $value;
         }
         $rConfig[$key] = \array_filter($rConfig[$key]);
-
-        $this->exclude = empty($config['exclude']) ? [] : $config['exclude'];
 
         return $rConfig;
     }
@@ -147,10 +155,12 @@ class RollbarHandler extends AbstractProcessingHandler
      */
     protected function injectService($name, $method)
     {
-        if ($this->container->has($name)) {
-            $service = $this->container->get($name);
+        $container = $this->getContainer();
+
+        if ($container->has($name)) {
+            $service = $container->get($name);
         } elseif (class_exists($name)) {
-            $service = new $name($this->container);
+            $service = new $name($container);
         }
 
         if (!empty($service) && method_exists($service, $method)) {
