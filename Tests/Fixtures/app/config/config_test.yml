@@ -1,21 +1,33 @@
 imports:
-    - { resource: config.yml }
-    - { resource: parameters.yml }
+- { resource: config.yml }
+- { resource: parameters.yml }
 
 symfony_rollbar:
-  enable: true
-  exclude:
-      - \Symfony\Component\Debug\Exception\FatalErrorException
-      - \SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException
-      - \ParseError
-      - \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface
-  rollbar:
-    access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_123456'
-    environment: '%kernel.environment%'
-    person_fn: \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider
-    checkIgnore: \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider
+    enable: true
+    exclude:
+    - \Symfony\Component\Debug\Exception\FatalErrorException
+    - \SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException
+    - \ParseError
+    - \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface
+    rollbar:
+        access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_123456'
+        environment: '%kernel.environment%'
+        person_fn: \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider
+        checkIgnore: \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider
+        custom:
+        - {key: hello, value: world}
+        - {key: key, value: value}
+        exception_sample_rates:
+        - {key: \Symfony\Component\Security\Core\Exception\AccessDeniedException, value: 0.1}
+        - {key: \Symfony\Component\HttpKernel\Exception\NotFoundHttpException, value: 0.5}
+        - {key: \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException, value: 0.5}
+        - {key: \Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException, value: 1}
+        error_sample_rates:
+        - {key: E_NOTICE, value: 0.1}
+        - {key: E_USER_ERROR, value: 0.5}
+        - {key: E_USER_NOTICE, value: 0.1}
 
-  rollbar_js:
-    accessToken: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'
-    payload:
-      environment: '%kernel.environment%'
+    rollbar_js:
+        access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'
+        payload:
+            environment: '%kernel.environment%'

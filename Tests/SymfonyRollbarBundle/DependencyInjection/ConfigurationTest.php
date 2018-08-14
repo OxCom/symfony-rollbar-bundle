@@ -26,20 +26,38 @@ class ConfigurationTest extends KernelTestCase
         $exclude[] = '\ParseError';
         $exclude[] = '\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface';
 
+        $errorRates = [
+            'E_NOTICE'      => 0.1,
+            'E_USER_ERROR'  => 0.5,
+            'E_USER_NOTICE' => 0.1,
+        ];
+
+        $exceptionRates = [
+            '\Symfony\Component\Security\Core\Exception\AccessDeniedException'                      => 0.1,
+            '\Symfony\Component\HttpKernel\Exception\NotFoundHttpException'                         => 0.5,
+            '\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException'                     => 0.5,
+            '\Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException' => 1,
+        ];
+
+        $custom = [
+            'hello' => 'world',
+            'key'   => 'value',
+        ];
+
         $default = [
             'enable'     => true,
             'exclude'    => $exclude,
             'rollbar'    => [
                 'access_token'                   => 'SOME_ROLLBAR_ACCESS_TOKEN_123456',
                 'agent_log_location'             => static::$kernel->getLogDir() . '/rollbar.log',
-                'base_api_url'                   => 'https://api.rollbar.com/api/1/',
+                'base_api_url'                   => Configuration::API_ENDPOINT,
                 'branch'                         => Configuration::BRANCH,
                 'capture_error_stacktraces'      => true,
                 'checkIgnore'                    => '\SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider',
                 'code_version'                   => '',
                 'enable_utf8_sanitization'       => true,
                 'environment'                    => static::$kernel->getEnvironment(),
-                'error_sample_rates'             => [],
+                'error_sample_rates'             => $errorRates,
                 'handler'                        => Configuration::HANDLER_BLOCKING,
                 'include_error_code_context'     => false,
                 'include_exception_code_context' => false,
@@ -55,9 +73,9 @@ class ConfigurationTest extends KernelTestCase
                 'use_error_reporting'            => false,
                 'proxy'                          => null,
                 'allow_exec'                     => true,
-                'endpoint'                       => 'https://api.rollbar.com/api/1/',
-                'custom'                         => [],
-                'exception_sample_rates'         => [],
+                'endpoint'                       => Configuration::API_ENDPOINT,
+                'custom'                         => $custom,
+                'exception_sample_rates'         => $exceptionRates,
                 'fluent_host'                    => '127.0.0.1',
                 'fluent_port'                    => 24224,
                 'fluent_tag'                     => 'rollbar',
@@ -68,19 +86,19 @@ class ConfigurationTest extends KernelTestCase
                 'local_vars_dump'                => false,
             ],
             'rollbar_js' => [
-                'accessToken'                => 'SOME_ROLLBAR_ACCESS_TOKEN_654321',
-                'payload'                    => ['environment' => static::$kernel->getEnvironment()],
-                'enabled'                    => true,
-                'captureUncaught'            => true,
-                'uncaughtErrorLevel'         => Configuration::JS_UNCAUGHT_LEVEL,
-                'captureUnhandledRejections' => true,
-                'ignoredMessages'            => [],
-                'verbose'                    => false,
-                'async'                      => true,
-                'autoInstrument'             => Configuration::$autoInstrument,
-                'itemsPerMinute'             => Configuration::JS_ITEMS_PER_MINUTE,
-                'maxItems'                   => Configuration::JS_MAX_ITEMS,
-                'scrubFields'                => Configuration::$scrubFieldsDefault,
+                'access_token'                 => 'SOME_ROLLBAR_ACCESS_TOKEN_654321',
+                'payload'                      => ['environment' => static::$kernel->getEnvironment()],
+                'enabled'                      => true,
+                'capture_uncaught'             => true,
+                'uncaught_error_level'         => Configuration::JS_UNCAUGHT_LEVEL,
+                'capture_unhandled_rejections' => true,
+                'ignored_messages'             => [],
+                'verbose'                      => false,
+                'async'                        => true,
+                'auto_instrument'              => Configuration::$autoInstrument,
+                'items_per_minute'             => Configuration::JS_ITEMS_PER_MINUTE,
+                'max_items'                    => Configuration::JS_MAX_ITEMS,
+                'scrub_fields'                 => Configuration::$scrubFieldsDefault,
             ],
         ];
 

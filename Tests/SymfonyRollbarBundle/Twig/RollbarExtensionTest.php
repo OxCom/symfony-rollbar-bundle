@@ -3,6 +3,7 @@
 namespace SymfonyRollbarBundle\Tests\Twig;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use SymfonyRollbarBundle\DependencyInjection\Configuration;
 use SymfonyRollbarBundle\Twig\RollbarExtension;
 
 /**
@@ -63,5 +64,35 @@ class RollbarExtensionTest extends KernelTestCase
             ['test_drb', true],
             ['test_drbj', true],
         ];
+    }
+
+    public function testConfigMap()
+    {
+        static::bootKernel();
+
+        $container   = static::$kernel->getContainer();
+        $rollbarTwig = new RollbarExtension($container);
+
+        $method = new \ReflectionMethod($rollbarTwig, 'getJsConfig');
+        $method->setAccessible(true);
+
+        $config = $method->invoke($rollbarTwig);
+        $expected = [
+            'accessToken'                => 'SOME_ROLLBAR_ACCESS_TOKEN_654321',
+            'payload'                    => ['environment' => static::$kernel->getEnvironment()],
+            'enabled'                    => true,
+            'captureUncaught'            => true,
+            'uncaughtErrorLevel'         => Configuration::JS_UNCAUGHT_LEVEL,
+            'captureUnhandledRejections' => true,
+            'ignoredMessages'            => [],
+            'verbose'                    => false,
+            'async'                      => true,
+            'autoInstrument'             => Configuration::$autoInstrument,
+            'itemsPerMinute'             => Configuration::JS_ITEMS_PER_MINUTE,
+            'maxItems'                   => Configuration::JS_MAX_ITEMS,
+            'scrubFields'                => Configuration::$scrubFieldsDefault,
+        ];
+
+        $this->assertEquals($expected, $config);
     }
 }

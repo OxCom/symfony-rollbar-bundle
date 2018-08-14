@@ -36,7 +36,7 @@ class PersonProviderTest extends KernelTestCase
         $this->assertNotEmpty($config['person_fn']);
 
         $call = $config['person_fn'];
-        $this->assertEquals(2, count($call), "The 'person_fn' should contains 2 elements");
+        $this->assertCount(2, $call, "The 'person_fn' should contains 2 elements");
 
         /** @var AbstractPersonProvider $service */
         $service = $call[0];

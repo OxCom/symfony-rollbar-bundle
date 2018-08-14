@@ -22,9 +22,18 @@ Simple configuration of bundle:
             code_version: ''
             enable_utf8_sanitization': true
             environment: 'production'
-            custom: []
-            error_sample_rates: []
-            exception_sample_rates: []
+            custom:
+                - {key: hello, value: world}
+                - {key: key, value: value}
+            error_sample_rates:
+                - {key: E_NOTICE, value: 0.1}
+                - {key: E_USER_ERROR, value: 0.5}
+                - {key: E_USER_NOTICE, value: 0.1}
+            exception_sample_rates:
+                - {key: \Symfony\Component\Security\Core\Exception\AccessDeniedException, value: 0.1}
+                - {key: \Symfony\Component\HttpKernel\Exception\NotFoundHttpException, value: 0.5}
+                - {key: \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException, value: 0.5}
+                - {key: \Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException, value: 1}
             fluent_host: '127.0.0.1'
             fluent_port: 24224
             fluent_tag: 'rollbar'
