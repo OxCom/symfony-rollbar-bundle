@@ -16,6 +16,6 @@ symfony_rollbar:
         checkIgnore: "symfony_rollbar.fixture.check_ignore_provider"
 
     rollbar_js:
-        accessToken: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'
+        access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'
         payload:
             environment: '%kernel.environment%'

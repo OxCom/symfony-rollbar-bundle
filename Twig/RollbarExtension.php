@@ -59,7 +59,8 @@ class RollbarExtension extends \Twig_Extension
      */
     public function rollbarJs()
     {
-        $helper = new RollbarJsHelper($this->config['rollbar_js']);
+        $config = $this->getJsConfig();
+        $helper = new RollbarJsHelper($config);
 
         $script = "<script>{{config}};\n{{rollbar-snippet}}</script>";
         $script = strtr($script, [
@@ -68,5 +69,39 @@ class RollbarExtension extends \Twig_Extension
         ]);
 
         return $script;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getJsConfig()
+    {
+        $config = $this->config['rollbar_js'];
+
+        // we have to map a list of fields
+        $map = [
+            'access_token'                 => 'accessToken',
+            'capture_uncaught'             => 'captureUncaught',
+            'uncaught_error_level'         => 'uncaughtErrorLevel',
+            'capture_unhandled_rejections' => 'captureUnhandledRejections',
+            'ignored_messages'             => 'ignoredMessages',
+            'auto_instrument'              => 'autoInstrument',
+            'items_per_minute'             => 'itemsPerMinute',
+            'max_items'                    => 'maxItems',
+            'scrub_fields'                 => 'scrubFields',
+        ];
+
+        foreach ($map as $old => $new) {
+            if (!isset($config[$old])) {
+                continue;
+            }
+
+            $value = $config[$old];
+            unset($config[$old]);
+
+            $config[$new] = $value;
+        }
+
+        return $config;
     }
 }

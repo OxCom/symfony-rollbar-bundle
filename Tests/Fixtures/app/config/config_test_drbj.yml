@@ -14,6 +14,6 @@ symfony_rollbar:
 
     rollbar_js:
         enabled: false
-        accessToken: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'
+        access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'
         payload:
             environment: '%kernel.environment%'
