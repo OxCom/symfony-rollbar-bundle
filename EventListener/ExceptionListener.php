@@ -2,7 +2,6 @@
 
 namespace SymfonyRollbarBundle\EventListener;
 
-use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleErrorEvent;
 use Symfony\Component\Console\Event\ConsoleExceptionEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;

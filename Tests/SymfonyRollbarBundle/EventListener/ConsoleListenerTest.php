@@ -13,12 +13,13 @@ use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcher;
 use SymfonyRollbarBundle\Command\DeployCommand;
 use SymfonyRollbarBundle\EventListener\AbstractListener;
+use SymfonyRollbarBundle\EventListener\ErrorListener;
 use SymfonyRollbarBundle\Tests\Fixtures\ErrorHandler;
 
 /**
  * Class ConsoleListenerTest
- * @package SymfonyRollbarBundle\Tests\SymfonyRollbarBundle\EventListener
- * @runTestsInSeparateProcesses
+ *
+ * @package SymfonyRollbarBundle\Tests\EventListener
  */
 class ConsoleListenerTest extends KernelTestCase
 {
@@ -30,6 +31,7 @@ class ConsoleListenerTest extends KernelTestCase
 
     /**
      * @dataProvider provideLegacyEvents
+     * @covers \SymfonyRollbarBundle\EventListener\ExceptionListener::onConsoleError
      *
      * @param $error
      * @param $event
@@ -73,8 +75,8 @@ class ConsoleListenerTest extends KernelTestCase
             /**
              * @var AbstractListener $listener
              */
-            if (!$listener[0] instanceof AbstractListener) {
-                // disable default symfony listeners
+            if (!$listener[0] instanceof AbstractListener || $listener[0] instanceof ErrorListener) {
+                // disable default symfony listeners and current error listener
                 $eventDispatcher->removeListener($key, $listener);
                 continue;
             }
