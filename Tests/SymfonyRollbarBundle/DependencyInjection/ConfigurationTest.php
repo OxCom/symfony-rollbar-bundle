@@ -87,4 +87,16 @@ class ConfigurationTest extends KernelTestCase
         $this->assertNotEmpty($config);
         $this->assertEquals($default, $config);
     }
+
+    public function testEmptyConfiguration()
+    {
+        static::bootKernel(['environment' => 'test_empty']);
+
+        $container = static::$kernel->getContainer();
+        $config    = $container->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
+
+        $this->assertArrayHasKey('enable', $config);
+        $this->assertArrayHasKey('exclude', $config);
+        $this->assertArrayHasKey('rollbar', $config);
+    }
 }

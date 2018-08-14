@@ -2,6 +2,8 @@
 
 namespace SymfonyRollbarBundle\EventListener;
 
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
+use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Monolog\Logger;
@@ -69,15 +71,31 @@ abstract class AbstractListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return [
-            KernelEvents::EXCEPTION => ['onKernelException', 1],
+        $events = [
+            KernelEvents::EXCEPTION => ['onKernelException', -100],
         ];
+
+        if (class_exists('Symfony\Component\Console\ConsoleEvents')) {
+            $key = class_exists('Symfony\Component\Console\Event\ConsoleErrorEvent')
+                ? ConsoleEvents::ERROR
+                : ConsoleEvents::EXCEPTION;
+
+            $events[$key] = ['onConsoleError', -100];
+        }
+
+        return $events;
     }
 
     /**
      * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
      */
     abstract public function onKernelException(GetResponseForExceptionEvent $event);
+
+    /**
+     * @param \Symfony\Component\Console\Event\ConsoleErrorEvent
+     *        |\Symfony\Component\Console\Event\ConsoleExceptionEvent $event
+     */
+    abstract public function onConsoleError($event);
 
     /**
      * @return \Symfony\Component\DependencyInjection\ContainerInterface

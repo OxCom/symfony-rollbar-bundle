@@ -2,6 +2,8 @@
 
 namespace SymfonyRollbarBundle\EventListener;
 
+use Symfony\Component\Console\Event\ConsoleErrorEvent;
+use Symfony\Component\Console\Event\ConsoleExceptionEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
@@ -62,5 +64,28 @@ class ExceptionListener extends AbstractListener
             'exception' => $exception,
             'payload'   => $payload,
         ]);
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Event\ConsoleErrorEvent
+     *        |\Symfony\Component\Console\Event\ConsoleExceptionEvent $event
+     */
+    public function onConsoleError($event)
+    {
+        if (class_exists('\Symfony\Component\Console\Event\ConsoleErrorEvent')
+            && $event instanceof ConsoleErrorEvent
+        ) {
+            $exception = $event->getError();
+            $this->handleException($exception);
+        } elseif (class_exists('\Symfony\Component\Console\Event\ConsoleExceptionEvent')
+            && $event instanceof ConsoleExceptionEvent
+        ) {
+            $exception = $event->getException();
+            if ($exception instanceof \Exception
+                || (version_compare(PHP_VERSION, '7.0.0') >= 0 && $exception instanceof \Error)
+            ) {
+                $this->handleException($exception);
+            }
+        }
     }
 }

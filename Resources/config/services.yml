@@ -11,13 +11,13 @@ services:
     class: "%symfony_rollbar.event_listener.exception_listener.class%"
     arguments: ["@service_container"]
     tags:
-      - { name: kernel.event_listener, event: kernel.exception, priority: -100 }
+      - { name: kernel.event_subscriber }
 
   symfony_rollbar.event_listener.error_listener:
     class: "%symfony_rollbar.event_listener.error_listener.class%"
     arguments: ["@service_container"]
     tags:
-      - { name: kernel.event_listener, event: kernel.exception }
+      - { name: kernel.event_subscriber }
 
   symfony_rollbar.provider.api_client:
     class: "%symfony_rollbar.provider.api_client.class%"

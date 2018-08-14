@@ -3,6 +3,7 @@
 namespace SymfonyRollbarBundle\EventListener;
 
 use Rollbar\ErrorWrapper;
+use Symfony\Component\Console\Event\ConsoleErrorEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
@@ -103,6 +104,15 @@ class ErrorListener extends AbstractListener
      * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
+    {
+        // dummy
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Event\ConsoleErrorEvent
+     *        |\Symfony\Component\Console\Event\ConsoleExceptionEvent $event
+     */
+    public function onConsoleError($event)
     {
         // dummy
     }
