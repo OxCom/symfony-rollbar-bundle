@@ -117,19 +117,20 @@ class RollbarHandler extends AbstractProcessingHandler
         }
 
         // map rates fields
-        $map = [
-            'exception_sample_rates',
-            'error_sample_rates',
-        ];
+        $key           = 'exception_sample_rates';
+        $rConfig[$key] = \array_map(function ($data) {
+            return empty($data['rate']) ? null : $data['rate'];
+        }, $rConfig[$key]);
+        $rConfig[$key] = \array_filter($rConfig[$key]);
 
-        foreach ($map as $key) {
-            $rConfig[$key] = \array_map(function($data) {
-                return empty($data['rate']) ? null : $data['rate'];
-            }, $rConfig[$key]);
+        $key = 'error_sample_rates';
+        foreach ($rConfig[$key] as $const => $data) {
+            $newKey = constant($const);
+            unset($rConfig[$key][$const]);
 
-            // drop empty values
-            $rConfig[$key] = \array_filter($rConfig[$key]);
+            $rConfig[$key][$newKey] = empty($data['rate']) ? null : $data['rate'];
         }
+        $rConfig[$key] = \array_filter($rConfig[$key]);
 
         $this->exclude = empty($config['exclude']) ? [] : $config['exclude'];
 

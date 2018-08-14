@@ -15,10 +15,14 @@ symfony_rollbar:
         person_fn: \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider
         checkIgnore: \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider
         exception_sample_rates:
-        -   \Symfony\Component\Security\Core\Exception\AccessDeniedException: 0.1
-        -   \Symfony\Component\HttpKernel\Exception\NotFoundHttpException: 0.5
-        -   \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: 0.5
-        -   \Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException: 1
+        - {class: \Symfony\Component\Security\Core\Exception\AccessDeniedException, rate: 0.1}
+        - {class: \Symfony\Component\HttpKernel\Exception\NotFoundHttpException, rate: 0.5}
+        - {class: \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException, rate: 0.5}
+        - {class: \Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException, rate: 1}
+        error_sample_rates:
+        - {type: E_NOTICE, rate: 0.1}
+        - {type: E_USER_ERROR, rate: 0.5}
+        - {type: E_USER_NOTICE, rate: 0.1}
 
     rollbar_js:
         accessToken: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'

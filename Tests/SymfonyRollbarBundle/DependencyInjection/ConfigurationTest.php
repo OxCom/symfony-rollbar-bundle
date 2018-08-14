@@ -26,6 +26,12 @@ class ConfigurationTest extends KernelTestCase
         $exclude[] = '\ParseError';
         $exclude[] = '\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface';
 
+        $errorRates = [
+            'E_NOTICE'      => ['rate' => 0.1],
+            'E_USER_ERROR'  => ['rate' => 0.5],
+            'E_USER_NOTICE' => ['rate' => 0.1],
+        ];
+
         $exceptionRates = [
             '\Symfony\Component\Security\Core\Exception\AccessDeniedException'                      => [
                 'rate' => 0.1,
@@ -54,7 +60,7 @@ class ConfigurationTest extends KernelTestCase
                 'code_version'                   => '',
                 'enable_utf8_sanitization'       => true,
                 'environment'                    => static::$kernel->getEnvironment(),
-                'error_sample_rates'             => [],
+                'error_sample_rates'             => $errorRates,
                 'handler'                        => Configuration::HANDLER_BLOCKING,
                 'include_error_code_context'     => false,
                 'include_exception_code_context' => false,

@@ -97,24 +97,17 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->arrayNode('error_sample_rates')
                             ->treatNullLike([])
-                            ->prototype('scalar')->end()
+                            ->useAttributeAsKey('type')
+                            ->arrayPrototype()
+                                ->children()
+                                    ->integerNode('type')->end()
+                                    ->floatNode('rate')->end()
+                                ->end()
+                            ->end()
                             ->defaultValue([])
                             ->end()
                         ->arrayNode('exception_sample_rates')
                             ->treatNullLike([])
-                            ->beforeNormalization()
-                                ->always(function($values) {
-                                    $result = [];
-
-                                    foreach ($values as $value) {
-                                        foreach ($value as $class => $rate) {
-                                            $result[] = ['class' => $class, 'rate' => $rate];
-                                        }
-                                    }
-
-                                    return $result;
-                                })
-                            ->end()
                             ->useAttributeAsKey('class')
                             ->arrayPrototype()
                                 ->children()
