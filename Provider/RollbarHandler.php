@@ -44,9 +44,31 @@ class RollbarHandler extends AbstractProcessingHandler
      * @var array
      */
     protected $injectServices = [
-        // config option, method
-        'person_fn'   => 'getPerson',
-        'checkIgnore' => 'checkIgnore',
+        /**
+         * 'person_fn' can be:
+         *  - service::__invoke()
+         *  - service::getPerson() - see: \SymfonyRollbarBundle\Provider\InterfacePersonProvider
+         *  - function() { ... }
+         */
+        'person_fn'          => 'getPerson',
+        /**
+         * 'check_ignore' can be:
+         *  - service::__invoke()
+         *  - service::checkIgnore() - see: \SymfonyRollbarBundle\Provider\InterfaceCheckIgnore
+         *  - function() { ... }
+         */
+        'check_ignore'       => 'checkIgnore',
+        /**
+         * 'custom_data_method' can be:
+         *  - service::__invoke() - see: \SymfonyRollbarBundle\Provider\InterfaceCustomData
+         *  - function() { ... }
+         */
+        'custom_data_method' => null,
+        /**
+         * 'logger' can be:
+         *  - service::log() - see: \SymfonyRollbarBundle\Provider\InterfaceLogger
+         */
+        'logger'             => 'log',
     ];
 
     /**
@@ -156,6 +178,7 @@ class RollbarHandler extends AbstractProcessingHandler
     protected function injectService($name, $method)
     {
         $container = $this->getContainer();
+        $service   = null;
 
         if ($container->has($name)) {
             $service = $container->get($name);
@@ -163,11 +186,25 @@ class RollbarHandler extends AbstractProcessingHandler
             $service = new $name($container);
         }
 
-        if (!empty($service) && method_exists($service, $method)) {
-            return [$service, $method];
-        } else {
-            return is_callable($name) ? $name : null;
+        $toCall = null;
+        switch (true) {
+            case (empty($service)):
+                // inline function
+                $toCall = is_callable($name) ? $name : null;
+                break;
+
+            case (!empty($service) && empty($method)):
+                // service with __invoke()
+                $toCall = is_callable($service) ? $service : null;
+                break;
+
+            case !empty($service) && !empty($method) && method_exists($service, $method):
+                // service with provided method
+                $toCall = [$service, $method];
+                break;
         }
+
+        return $toCall;
     }
 
     /**

@@ -13,7 +13,8 @@ symfony_rollbar:
         access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_123456'
         environment: '%kernel.environment%'
         person_fn: "symfony_rollbar.fixture.person_provider"
-        checkIgnore: "symfony_rollbar.fixture.check_ignore_provider"
+        check_ignore: "symfony_rollbar.fixture.check_ignore_provider"
+        custom_data_method: "symfony_rollbar.fixture.custom_data_method"
 
     rollbar_js:
         access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'

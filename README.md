@@ -7,7 +7,7 @@
 
 Bundle for Symfony Framework (v2.8.x, 3.x, 4.x) that integrates Rollbar tracker
 
-Find all documentation here [here](https://github.com/OxCom/symfony-rollbar-bundle/tree/master/Resources/doc)
+More documentation here [here](https://github.com/OxCom/symfony-rollbar-bundle/tree/master/Resources/doc)
 
 # Install
 1. Add bundle as dependency
@@ -23,7 +23,10 @@ Find all documentation here [here](https://github.com/OxCom/symfony-rollbar-bund
                 - \AppBundle\Exceptions\MyAwesomeException
             rollbar:
                 access_token: 'some-secret-token-here'
+            rollbar_js:
+                access_token: 'some-public-token-here'
     ```
 
 # Bugs and Issues
-Please, if You found a bug or something, that is not working properly, contact me and tell what's wrong. It's nice to have an example how to reproduce a bug, or any idea how to fix it in Your request. I'll take care about it ASAP.
+Please, if You found a bug or something, that is not working properly, contact me and tell what's wrong. 
+It's nice to have an example how to reproduce a bug, or any idea how to fix it in Your request. I'll take care about it ASAP.

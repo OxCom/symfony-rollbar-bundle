@@ -1,6 +1,7 @@
 parameters:
     symfony_rollbar.fixture.person_provider.class: \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider
     symfony_rollbar.fixture.check_ignore_provider.class: \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider
+    symfony_rollbar.fixture.custom_data_method.class: \SymfonyRollbarBundle\Tests\Fixtures\CustomDataProvider
 
 services:
     symfony_rollbar.fixture.person_provider:
@@ -10,4 +11,8 @@ services:
 
     symfony_rollbar.fixture.check_ignore_provider:
         class: "%symfony_rollbar.fixture.check_ignore_provider.class%"
+        public: true
+
+    symfony_rollbar.fixture.custom_data_method:
+        class: "%symfony_rollbar.fixture.custom_data_method.class%"
         public: true

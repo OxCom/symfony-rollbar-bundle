@@ -32,9 +32,9 @@ class CheckIgnoreTest extends KernelTestCase
         $method->setAccessible(true);
 
         $config = $method->invoke($handler);
-        $this->assertNotEmpty($config['checkIgnore']);
+        $this->assertNotEmpty($config['check_ignore']);
 
-        $call = $config['checkIgnore'];
+        $call = $config['check_ignore'];
         $this->assertCount(2, $call, "The 'checkIgnore' should contains 2 elements");
 
         /** @var \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider $service */
@@ -85,9 +85,9 @@ class CheckIgnoreTest extends KernelTestCase
         $method->setAccessible(true);
 
         $config = $method->invoke($handler);
-        $this->assertNotEmpty($config['checkIgnore']);
+        $this->assertNotEmpty($config['check_ignore']);
 
-        $method = $config['checkIgnore'];
+        $method = $config['check_ignore'];
         $this->assertEquals('should_ignore', $method);
 
         $message = new \Rollbar\Payload\Message('rollbar');
