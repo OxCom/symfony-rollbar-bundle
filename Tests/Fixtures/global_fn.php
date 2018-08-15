@@ -23,3 +23,18 @@ function should_ignore($isUncaught, $toLog, $payload)
 {
     return false;
 }
+
+/**
+ * @param \Exception|\Throwable|string $toLog
+ * @param mixed $context
+ *
+ * @return array
+ */
+function custom_data_provider($toLog, $context)
+{
+    return [
+        'random_number' => rand(1, 1000),
+        'to_log'        => $toLog,
+        'context'       => $context,
+    ];
+}

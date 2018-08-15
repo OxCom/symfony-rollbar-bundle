@@ -18,7 +18,7 @@ Simple configuration of bundle:
             base_api_url: 'https://api.rollbar.com/api/1/'
             branch: 'master'
             capture_error_stacktraces: true
-            checkIgnore: null
+            check_ignore: null
             code_version: ''
             enable_utf8_sanitization': true
             environment: 'production'
@@ -55,27 +55,35 @@ Simple configuration of bundle:
             proxy: null
             send_message_trace: false
             include_raw_request_body: false
-            local_vars_dump: false
+            local_vars_dump: true
+            capture_email: false
+            capture_ip: true
+            capture_username: false
+            custom_data_method: null
+            custom_truncation: null
+            ca_cert_path: null
+            transformer: null
+            verbosity: 'error'
         rollbar_js:
             enabled: true
-            accessToken: 'some-public-token'
-            captureUncaught: true
-            uncaughtErrorLevel: 'error'
-            captureUnhandledRejections: true
+            access_token: 'some-public-token'
+            capture_uncaught: true
+            uncaught_error_level: 'error'
+            capture_unhandled_rejections: true
             payload:
-                environment: environment: '%kernel.environment%'
-            ignoredMessages: []
+                environment: '%kernel.environment%'
+            ignored_messages: []
             verbose: false
             async: true
-            autoInstrument:
+            auto_instrument:
                 network: true
                 log: true
                 dom: true
                 navigation: true
                 connectivity: true
-            itemsPerMinute: 60
-            maxItems: 0
-            scrubFields: ['passwd', 'password', 'secret', 'confirm_password', 'password_confirmation', 'auth_token', 'csrf_token']
+            items_per_minute: 60
+            max_items: 0
+            scrub_fields: ['passwd', 'password', 'secret', 'confirm_password', 'password_confirmation', 'auth_token', 'csrf_token']
 
 Bundle configuration
 --------------------
@@ -102,87 +110,19 @@ Here you can description of some important configuration options for RollBar.
  
 ``root``: Path to your project's root dir. Default ``%kernel.root_dir%``
 
-``checkIgnore``: Function called before sending payload to Rollbar, return true to stop the error from being sent to Rollbar.
+``check_ignore``: Function called before sending payload to Rollbar, `Example of check ignore`_
 
-Use globally defined function:
+``custom_data_method``: Function creating dynamic custom data on runtime during error reporting, `Example of custom data method`_
 
-.. code-block:: yaml
-
-    symfony_rollbar:
-        # ...
-        rollbar:
-            # ...
-            checkIgnore: 'function_name_here'
-
-Use custom ``CheckIgnoreProvider`` class that should implements ``InterfaceCheckIgnore``:
-
-.. code-block:: yaml
-
-    symfony_rollbar:
-        # ...
-        rollbar:
-            # ...
-            checkIgnore: '\SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider'
-
-Use custom ``CheckIgnoreProvider`` service that class should implements ``InterfaceCheckIgnore``:
-
-.. code-block:: yaml
-
-    symfony_rollbar:
-        # ...
-        rollbar:
-            # ...
-            checkIgnore: 'awesome_app.rollbar_check_ignore_provider'
-
+.. _`Example of check ignore`: check_ignore.rst
+.. _`Example of custom data method`: custom_data_method.rst
 
 RollBar - Person Tracking
 -------------------------
-Rollbar `can track`_ which of your People (users) are affected by each error. There is one of the options:
-
-``person_fn``: A function reference (string, etc. - anything that `call_user_func()`_ can handle) returning an array like the one for 'person'.
-
-Use globally defined function:
-
-.. code-block:: yaml
-
-    symfony_rollbar:
-        # ...
-        rollbar:
-            # ...
-            person_fn: 'function_name_here'
-
-Use custom ``PersonProvider`` class that should implements ``InterfacePersonProvider``:
-
-.. code-block:: yaml
-
-    symfony_rollbar:
-        # ...
-        rollbar:
-            # ...
-            person_fn: '\SymfonyRollbarBundle\Tests\Fixtures\PersonProvider'
-
-Use custom ``PersonProvider`` service that class should implements ``InterfacePersonProvider``:
-
-.. code-block:: yaml
-
-    symfony_rollbar:
-        # ...
-        rollbar:
-            # ...
-            person_fn: 'awesome_app.rollbar_person_provider'
-
-Than in your ``PersonProvider`` class/service or function you have to return user data as array:
-
-.. code-block:: php
-    // ..
-    return [
-        'id'       => 'user_id',
-        'username' => 'username',
-        'email'    => 'email',
-    ];
+Rollbar `can track`_ which of your People (users) are affected by each error. `Example of tracking`_
 
 .. _`can track`: https://rollbar.com/docs/person-tracking/
-.. _`call_user_func()`: http://php.net/call_user_func
+.. _`Example of tracking`: person_tracking.rst
 
 RollBarJS - Integration
 -----------------------

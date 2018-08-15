@@ -321,7 +321,7 @@ class RollbarHandlerTest extends KernelTestCase
             'base_api_url'                   => Configuration::API_ENDPOINT,
             'branch'                         => Configuration::BRANCH,
             'capture_error_stacktraces'      => true,
-            'checkIgnore'                    => [
+            'check_ignore'                    => [
                 new \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider(),
                 'checkIgnore',
             ],
@@ -357,7 +357,15 @@ class RollbarHandlerTest extends KernelTestCase
             'scrub_whitelist'                => null,
             'send_message_trace'             => false,
             'include_raw_request_body'       => false,
-            'local_vars_dump'                => false,
+            'local_vars_dump'                => true,
+            'capture_email'                  => false,
+            'capture_ip'                     => true,
+            'capture_username'               => false,
+            'custom_data_method'             => null,
+            'custom_truncation'              => null,
+            'ca_cert_path'                   => null,
+            'transformer'                    => null,
+            'verbosity'                      => 'error',
             'framework'                      => 'Symfony ' . \Symfony\Component\HttpKernel\Kernel::VERSION,
         ];
 

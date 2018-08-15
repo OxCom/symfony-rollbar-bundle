@@ -13,7 +13,7 @@ symfony_rollbar:
         access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_123456'
         environment: '%kernel.environment%'
         person_fn: \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider
-        checkIgnore: \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider
+        check_ignore: \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider
         custom:
         - {key: hello, value: world}
         - {key: key, value: value}

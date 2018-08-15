@@ -12,7 +12,8 @@ symfony_rollbar:
         access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_123456'
         environment: '%kernel.environment%'
         person_fn: "get_awesome_person"
-        checkIgnore: "should_ignore"
+        check_ignore: "should_ignore"
+        custom_data_method: "custom_data_provider"
 
     rollbar_js:
         access_token: 'SOME_ROLLBAR_ACCESS_TOKEN_654321'
