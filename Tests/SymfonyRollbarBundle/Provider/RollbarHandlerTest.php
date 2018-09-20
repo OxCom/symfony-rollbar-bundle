@@ -334,7 +334,7 @@ class RollbarHandlerTest extends KernelTestCase
             'include_exception_code_context' => false,
             'included_errno'                 => $defaultErrorMask,
             'logger'                         => null,
-            'person'                         => [],
+            'person'                         => null,
             'person_fn'                      => [
                 new \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider($container),
                 'getPerson',
