@@ -6,7 +6,6 @@ use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 use Rollbar\Rollbar as RollbarNotifier;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
 use Rollbar\Payload\Level;
 use SymfonyRollbarBundle\Provider\Api\Filter;
@@ -163,6 +162,9 @@ class RollbarHandler extends AbstractProcessingHandler
             $rConfig[$key][$newKey] = $value;
         }
         $rConfig[$key] = \array_filter($rConfig[$key]);
+
+        // person should be an array or null
+        $rConfig['person'] = empty($rConfig['person']) ? null : $rConfig['person'];
 
         return $rConfig;
     }
