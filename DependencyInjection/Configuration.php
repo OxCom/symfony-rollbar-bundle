@@ -54,7 +54,6 @@ class Configuration implements ConfigurationInterface
      * @var array
      */
     public static $exclude = [
-        '\Symfony\Component\Debug\Exception\FatalErrorException',
     ];
 
     /**

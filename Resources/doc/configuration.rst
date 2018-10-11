@@ -7,8 +7,7 @@ Simple configuration of bundle:
 
     symfony_rollbar:
         enable: true
-        exclude:
-            - \Symfony\Component\Debug\Exception\FatalErrorException
+        exclude: []
         rollbar:
             access_token: 'some-secret-token-here'
             environment: '%kernel.environment%'
