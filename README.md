@@ -19,7 +19,6 @@ More documentation here [here](https://github.com/OxCom/symfony-rollbar-bundle/t
     symfony_rollbar:
             enable: true
             exclude:
-                - \Symfony\Component\Debug\Exception\FatalErrorException
                 - \AppBundle\Exceptions\MyAwesomeException
             rollbar:
                 access_token: 'some-secret-token-here'

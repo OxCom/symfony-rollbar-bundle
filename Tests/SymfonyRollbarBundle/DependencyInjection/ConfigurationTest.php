@@ -22,6 +22,7 @@ class ConfigurationTest extends KernelTestCase
         $defaultErrorMask = E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_USER_ERROR | E_RECOVERABLE_ERROR;
 
         $exclude   = Configuration::$exclude;
+        $exclude[] = '\Symfony\Component\Debug\Exception\FatalErrorException';
         $exclude[] = '\SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException';
         $exclude[] = '\ParseError';
         $exclude[] = '\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface';
