@@ -5,19 +5,17 @@ namespace SymfonyRollbarBundle\Provider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use SymfonyRollbarBundle\Provider\PersonInterface;
 
+/**
+ * Class AbstractPersonProvider
+ *
+ * @package SymfonyRollbarBundle\Provider
+ */
 abstract class AbstractPersonProvider
 {
     /**
      * @var \SymfonyRollbarBundle\Provider\PersonInterface
      */
     protected $person;
-
-    /**
-     * Initialize current person that should be tracked with Rollbar
-     *
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-     */
-    abstract public function __construct(ContainerInterface $container);
 
     /**
      * @return array|null
