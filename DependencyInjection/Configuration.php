@@ -61,8 +61,14 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder      = new TreeBuilder();
-        $rootNode         = $treeBuilder->root(SymfonyRollbarExtension::ALIAS);
+        if (method_exists(TreeBuilder::class, 'getRootNode')) {
+            $treeBuilder = new TreeBuilder(SymfonyRollbarExtension::ALIAS);
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            $treeBuilder = new TreeBuilder();
+            $rootNode    = $treeBuilder->root(SymfonyRollbarExtension::ALIAS);
+        }
+
         $defaultErrorMask = E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_USER_ERROR | E_RECOVERABLE_ERROR;
 
         $rootNode
