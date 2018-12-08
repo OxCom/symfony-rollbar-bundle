@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.org/OxCom/symfony-rollbar-bundle.svg?branch=master)](https://travis-ci.org/OxCom/symfony-rollbar-bundle)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
-Bundle for Symfony Framework (v2.8.x, 3.x, 4.x) that integrates Rollbar tracker
+Bundle for Symfony Framework (2.8.x, 3.x, 4.x) that integrates Rollbar tracker
 
 More documentation here [here](https://github.com/OxCom/symfony-rollbar-bundle/tree/master/Resources/doc)
 
@@ -25,6 +25,18 @@ More documentation here [here](https://github.com/OxCom/symfony-rollbar-bundle/t
             rollbar_js:
                 access_token: 'some-public-token-here'
     ```
+3. Load bundle for 4.x:
+    ```php
+   \SymfonyRollbarBundle\SymfonyRollbarBundle::class => ['all' => true]
+   ```
+   or for 2.8.x and 3.x
+   ```php
+   $bundles = [
+       // ...
+       new \SymfonyRollbarBundle\SymfonyRollbarBundle(),
+       // ...
+   ];
+   ```
 
 # Bugs and Issues
 Please, if You found a bug or something, that is not working properly, contact me and tell what's wrong. 
