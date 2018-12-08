@@ -1,38 +1,54 @@
 language: php
 
 matrix:
-  include:
-    - php: 5.6
-      env: SYMFONY_VERSION=^2.8
-    - php: 7.0
-      env: SYMFONY_VERSION=^2.8
-    - php: 7.1
-      env: SYMFONY_VERSION=^2.8
-    - php: 7.2
-      env: SYMFONY_VERSION=^2.8
-    - php: 5.6
-      env: SYMFONY_VERSION=~3.0
-    - php: 7.0
-      env: SYMFONY_VERSION=~3.0
-    - php: 7.1
-      env: SYMFONY_VERSION=~3.0
-    - php: 7.2
-      env: SYMFONY_VERSION=~3.0
-    - php: 7.1
-      env: SYMFONY_VERSION=~4.0
-    - php: 7.2
-      env: SYMFONY_VERSION=~4.0
+    include:
+        -   php: 5.6
+            env: SYMFONY_VERSION=^2.8
+        -   php: 7.0
+            env: SYMFONY_VERSION=^2.8
+        -   php: 7.1
+            env: SYMFONY_VERSION=^2.8
+        -   php: 7.2
+            env: SYMFONY_VERSION=^2.8
+        -   php: 5.6
+            env: SYMFONY_VERSION=~3.0
+        -   php: 7.0
+            env: SYMFONY_VERSION=~3.0
+        -   php: 7.1
+            env: SYMFONY_VERSION=~3.0
+        -   php: 7.2
+            env: SYMFONY_VERSION=~3.0
+        -   php: 5.6
+            env: SYMFONY_VERSION=~3.4
+        -   php: 7.0
+            env: SYMFONY_VERSION=~3.4
+        -   php: 7.1
+            env: SYMFONY_VERSION=~3.4
+        -   php: 7.2
+            env: SYMFONY_VERSION=~3.4
+        -   php: 7.1
+            env: SYMFONY_VERSION=~4.0
+        -   php: 7.2
+            env: SYMFONY_VERSION=~4.0
+        -   php: 7.1
+            env: SYMFONY_VERSION=~4.1
+        -   php: 7.2
+            env: SYMFONY_VERSION=~4.1
+        -   php: 7.1
+            env: SYMFONY_VERSION=~4.2
+        -   php: 7.2
+            env: SYMFONY_VERSION=~4.2
 
 before_install:
-  - curl -s https://getcomposer.org/installer | php
-  - php composer.phar require symfony/symfony:${SYMFONY_VERSION} --no-update
-  - php -dmemory_limit=-1 composer.phar update
+    - curl -s https://getcomposer.org/installer | php
+    - php composer.phar require symfony/symfony:${SYMFONY_VERSION} --no-update
+    - php -dmemory_limit=-1 composer.phar update
 
 script:
-  - cat composer.json | grep symfony\/symfony
-  - php -v
-  - ./vendor/bin/phpcs --standard=psr2 DependencyInjection/ EventListener/ Provider/ Tests/SymfonyRollbarBundle
-  - ./vendor/bin/phpunit -c phpunit.xml.dist
+    - cat composer.json | grep symfony\/symfony
+    - php -v
+    - ./vendor/bin/phpcs --standard=psr2 DependencyInjection/ EventListener/ Provider/ Tests/SymfonyRollbarBundle
+    - ./vendor/bin/phpunit -c phpunit.xml.dist
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)
