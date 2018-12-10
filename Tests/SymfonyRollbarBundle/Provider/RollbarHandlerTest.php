@@ -320,6 +320,7 @@ class RollbarHandlerTest extends KernelTestCase
             'agent_log_location'             => static::$kernel->getLogDir() . '/rollbar.log',
             'base_api_url'                   => Configuration::API_ENDPOINT,
             'branch'                         => Configuration::BRANCH,
+            'autodetect_branch'              => false,
             'capture_error_stacktraces'      => true,
             'check_ignore'                    => [
                 new \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider(),
@@ -367,6 +368,9 @@ class RollbarHandlerTest extends KernelTestCase
             'transformer'                    => null,
             'verbosity'                      => 'error',
             'framework'                      => 'Symfony ' . \Symfony\Component\HttpKernel\Kernel::VERSION,
+            'max_nesting_depth'              => -1,
+            'max_items'                      => Configuration::PHP_MAX_ITEMS,
+
         ];
 
         $this->assertEquals($default, $config);
