@@ -7,7 +7,7 @@
 
 Bundle for Symfony Framework (2.8.x, 3.x, 4.x) that integrates Rollbar tracker
 
-More documentation here [here](https://github.com/OxCom/symfony-rollbar-bundle/tree/master/Resources/doc)
+Find more documentation [here](https://github.com/OxCom/symfony-rollbar-bundle/tree/master/Resources/doc)
 
 # Install
 1. Add bundle as dependency
