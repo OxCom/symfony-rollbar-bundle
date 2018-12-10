@@ -24,7 +24,8 @@ class Configuration implements ConfigurationInterface
     const ENVIRONMENT = 'production';
     const TIMEOUT     = 3;
 
-    const API_ENDPOINT = 'https://api.rollbar.com/api/1/';
+    const API_ENDPOINT  = 'https://api.rollbar.com/api/1/';
+    const PHP_MAX_ITEMS = 10;
 
     const JS_ITEMS_PER_MINUTE = 60;
     const JS_MAX_ITEMS        = 0;
@@ -87,6 +88,7 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue('%kernel.logs_dir%/rollbar.log')
                         ->end()
                         ->booleanNode('allow_exec')->defaultTrue()->end()
+                        ->booleanNode('autodetect_branch')->defaultFalse()->end()
                         ->scalarNode('endpoint')->defaultValue(static::API_ENDPOINT)->end()
                         ->scalarNode('base_api_url')->defaultValue(static::API_ENDPOINT)->end()
                         ->scalarNode('branch')->defaultValue(static::BRANCH)->end()
@@ -166,6 +168,8 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('send_message_trace')->defaultFalse()->end()
                         ->booleanNode('include_raw_request_body')->defaultFalse()->end()
                         ->booleanNode('local_vars_dump')->defaultTrue()->end()
+                        ->scalarNode('max_nesting_depth')->defaultValue(-1)->end()
+                        ->scalarNode('max_items')->defaultValue(static::PHP_MAX_ITEMS)->end()
                     ->end()
                 ->end()
                 ->arrayNode('rollbar_js')->children()
