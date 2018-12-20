@@ -2,6 +2,7 @@
 
 namespace SymfonyRollbarBundle\Tests\DependencyInjection;
 
+use Rollbar\Config;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use SymfonyRollbarBundle\DependencyInjection\Configuration;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
@@ -53,6 +54,7 @@ class ConfigurationTest extends KernelTestCase
                 'agent_log_location'             => static::$kernel->getLogDir() . '/rollbar.log',
                 'base_api_url'                   => Configuration::API_ENDPOINT,
                 'branch'                         => Configuration::BRANCH,
+                'autodetect_branch'              => false,
                 'capture_error_stacktraces'      => true,
                 'check_ignore'                   => '\SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider',
                 'code_version'                   => '',
@@ -93,7 +95,8 @@ class ConfigurationTest extends KernelTestCase
                 'ca_cert_path'                   => null,
                 'transformer'                    => null,
                 'verbosity'                      => 'error',
-
+                'max_nesting_depth'              => -1,
+                'max_items'                      => Configuration::PHP_MAX_ITEMS,
             ],
             'rollbar_js' => [
                 'access_token'                 => 'SOME_ROLLBAR_ACCESS_TOKEN_654321',
@@ -126,5 +129,22 @@ class ConfigurationTest extends KernelTestCase
         $this->assertArrayHasKey('enable', $config);
         $this->assertArrayHasKey('exclude', $config);
         $this->assertArrayHasKey('rollbar', $config);
+    }
+
+    public function testCompareRollbarDefaults()
+    {
+        static::bootKernel();
+        $container = static::$kernel->getContainer();
+
+        $config     = $container->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
+        $rbConfig   = Config::listOptions();
+
+        foreach ($rbConfig as $key) {
+            if ($key === 'enabled') {
+                continue;
+            }
+
+            $this->assertArrayHasKey($key, $config['rollbar']);
+        }
     }
 }

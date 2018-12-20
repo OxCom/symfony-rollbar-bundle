@@ -52,6 +52,7 @@ class SymfonyRollbarExtensionTest extends AbstractExtensionTestCase
                 'agent_log_location'             => '%kernel.logs_dir%/rollbar.log',
                 'base_api_url'                   => 'https://api.rollbar.com/api/1/',
                 'branch'                         => Configuration::BRANCH,
+                'autodetect_branch'              => false,
                 'capture_error_stacktraces'      => true,
                 'check_ignore'                    => null,
                 'code_version'                   => '',
@@ -92,6 +93,8 @@ class SymfonyRollbarExtensionTest extends AbstractExtensionTestCase
                 'ca_cert_path'                   => null,
                 'transformer'                    => null,
                 'verbosity'                      => 'error',
+                'max_nesting_depth'              => -1,
+                'max_items'                      => Configuration::PHP_MAX_ITEMS,
             ],
         ];
 
