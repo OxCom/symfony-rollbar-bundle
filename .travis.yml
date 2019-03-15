@@ -56,7 +56,7 @@ matrix:
 
 before_install:
     - curl -s https://getcomposer.org/installer | php
-    - php composer.phar composer require roave/security-advisories:dev-master --no-update
+    - php composer.phar require roave/security-advisories:dev-master --no-update
     - php composer.phar require symfony/symfony:${SYMFONY_VERSION} --no-update
     - php -dmemory_limit=-1 composer.phar update
 
