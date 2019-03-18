@@ -42,7 +42,7 @@ class RollbarExtensionTest extends KernelTestCase
             $this->assertNotEmpty($list);
 
             $function = $list[0];
-            $this->assertInstanceOf(\Twig_SimpleFunction::class, $function);
+            $this->assertInstanceOf(\Twig\TwigFunction::class, $function);
 
             $output = $rollbarTwig->rollbarJs();
 
