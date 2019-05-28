@@ -21,8 +21,9 @@ class DeployCommandTest extends KernelTestCase
 
     public function testRegistration()
     {
+        $container = static::$kernel->getContainer();
         $application = new Application(static::$kernel);
-        $application->add(new DeployCommand());
+        $application->add(new DeployCommand($container));
 
         try {
             $application->find('rollbar:deploy');
@@ -71,7 +72,7 @@ class DeployCommandTest extends KernelTestCase
         $container->set('symfony_rollbar.provider.api_client', $client);
 
         $application = new Application(static::$kernel);
-        $application->add(new DeployCommand());
+        $application->add(new DeployCommand($container));
 
         try {
             $command = $application->find('rollbar:deploy');
@@ -112,8 +113,9 @@ class DeployCommandTest extends KernelTestCase
 
     public function testExecuteGeneric()
     {
+        $container = static::$kernel->getContainer();
         $application = new Application(static::$kernel);
-        $application->add(new DeployCommand());
+        $application->add(new DeployCommand($container));
 
         $command       = $application->find('rollbar:deploy');
         $commandTester = new CommandTester($command);

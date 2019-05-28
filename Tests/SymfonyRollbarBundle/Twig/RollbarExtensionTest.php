@@ -5,6 +5,7 @@ namespace SymfonyRollbarBundle\Tests\Twig;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use SymfonyRollbarBundle\DependencyInjection\Configuration;
 use SymfonyRollbarBundle\Twig\RollbarExtension;
+use Twig\TwigFunction;
 
 /**
  * Class RollbarExtensionTest
@@ -42,7 +43,7 @@ class RollbarExtensionTest extends KernelTestCase
             $this->assertNotEmpty($list);
 
             $function = $list[0];
-            $this->assertInstanceOf(\Twig\TwigFunction::class, $function);
+            $this->assertInstanceOf(TwigFunction::class, $function);
 
             $output = $rollbarTwig->rollbarJs();
 

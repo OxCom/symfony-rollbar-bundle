@@ -30,7 +30,7 @@
     "require": {
         "php": ">=5.6",
         "monolog/monolog": "^1.23",
-        "rollbar/rollbar": "^1.6",
+        "rollbar/rollbar": "^1.8",
         "symfony/dependency-injection": "^2.8|~3.0|~4.0|~4.1|~4.2",
         "symfony/config": "^2.8|~3.0|~4.0|~4.1|~4.2",
         "symfony/http-kernel": "^2.8|~3.0|~4.0|~4.1|~4.2",

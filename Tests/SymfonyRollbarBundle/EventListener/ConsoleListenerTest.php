@@ -31,7 +31,7 @@ class ConsoleListenerTest extends KernelTestCase
 
     /**
      * @dataProvider provideLegacyEvents
-     * @covers \SymfonyRollbarBundle\EventListener\ExceptionListener::onConsoleError
+     * @covers       \SymfonyRollbarBundle\EventListener\ExceptionListener::onConsoleError
      *
      * @param $error
      * @param $event
@@ -93,15 +93,17 @@ class ConsoleListenerTest extends KernelTestCase
      */
     public function provideLegacyEvents()
     {
-        $input = new ArrayInput([]);
+        $input  = new ArrayInput([]);
         $output = new StreamOutput(
             fopen('php://memory', 'w', false),
             OutputInterface::VERBOSITY_QUIET,
             false
         );
 
-        $error = new \Exception('This is console exception');
-        $command = new DeployCommand();
+        static::bootKernel();
+        $container = static::$kernel->getContainer();
+        $error     = new \Exception('This is console exception');
+        $command   = new DeployCommand($container);
 
         $events = [];
 

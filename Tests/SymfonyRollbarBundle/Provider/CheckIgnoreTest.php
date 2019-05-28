@@ -2,6 +2,10 @@
 
 namespace SymfonyRollbarBundle\Tests\Provider;
 
+use Rollbar\Payload\Body;
+use Rollbar\Payload\Data;
+use Rollbar\Payload\Message;
+use Rollbar\Payload\Payload;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use SymfonyRollbarBundle\Provider\RollbarHandler;
 use SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider;
@@ -45,10 +49,10 @@ class CheckIgnoreTest extends KernelTestCase
 
         $service->setIgnore($expected);
 
-        $message = new \Rollbar\Payload\Message('rollbar');
-        $body    = new \Rollbar\Payload\Body($message);
-        $data    = new \Rollbar\Payload\Data($env, $body);
-        $payload = new \Rollbar\Payload\Payload($data, $config['access_token']);
+        $message = new Message('rollbar');
+        $body    = new Body($message);
+        $data    = new Data($env, $body);
+        $payload = new Payload($data, $config['access_token']);
 
         $ignore = call_user_func($call, false, 'toLog', $payload);
 
@@ -90,10 +94,10 @@ class CheckIgnoreTest extends KernelTestCase
         $method = $config['check_ignore'];
         $this->assertEquals('should_ignore', $method);
 
-        $message = new \Rollbar\Payload\Message('rollbar');
-        $body    = new \Rollbar\Payload\Body($message);
-        $data    = new \Rollbar\Payload\Data($env, $body);
-        $payload = new \Rollbar\Payload\Payload($data, $config['access_token']);
+        $message = new Message('rollbar');
+        $body    = new Body($message);
+        $data    = new Data($env, $body);
+        $payload = new Payload($data, $config['access_token']);
 
         $ignore = call_user_func($method, false, 'toLog', $payload);
         $this->assertFalse($ignore);

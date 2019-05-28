@@ -19,7 +19,6 @@ Simple configuration of bundle:
             capture_error_stacktraces: true
             check_ignore: null
             code_version: ''
-            enable_utf8_sanitization': true
             environment: 'production'
             custom:
                 - {key: hello, value: world}
@@ -47,7 +46,6 @@ Simple configuration of bundle:
             root: '%kernel.root_dir%'
             scrub_fields: ['passwd', 'password', 'secret', 'confirm_password', 'password_confirmation', 'auth_token', 'csrf_token']
             scrub_whitelist: null
-            shift_function': true
             timeout: 3
             report_suppressed: false
             use_error_reporting: false
@@ -62,7 +60,6 @@ Simple configuration of bundle:
             custom_truncation: null
             ca_cert_path: null
             transformer: null
-            verbosity: 'error'
         rollbar_js:
             enabled: true
             access_token: 'some-public-token'

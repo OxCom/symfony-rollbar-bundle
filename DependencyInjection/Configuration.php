@@ -26,6 +26,9 @@ class Configuration implements ConfigurationInterface
 
     const API_ENDPOINT  = 'https://api.rollbar.com/api/1/';
     const PHP_MAX_ITEMS = 10;
+    const MIN_OCCURRENCES_LEVEL = 0;
+
+    const VERBOSE = 'none';
 
     const JS_ITEMS_PER_MINUTE = 60;
     const JS_MAX_ITEMS        = 0;
@@ -98,7 +101,6 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('capture_error_stacktraces')->defaultTrue()->end()
                         ->scalarNode('check_ignore')->defaultNull()->end()
                         ->scalarNode('code_version')->defaultValue('')->end()
-                        ->booleanNode('enable_utf8_sanitization')->defaultTrue()->end()
                         ->scalarNode('environment')->defaultValue(static::ENVIRONMENT)->end()
                         ->arrayNode('custom')
                             ->treatNullLike([])
@@ -159,8 +161,6 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->scalarNode('scrub_whitelist')->defaultNull()->end()
                         ->scalarNode('transformer')->defaultNull()->end()
-                        ->scalarNode('verbosity')->defaultValue(\Psr\Log\LogLevel::ERROR)->end()
-                        ->booleanNode('shift_function')->defaultTrue()->end()
                         ->scalarNode('timeout')->defaultValue(static::TIMEOUT)->end()
                         ->booleanNode('report_suppressed')->defaultFalse()->end()
                         ->booleanNode('use_error_reporting')->defaultFalse()->end()
@@ -170,6 +170,11 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('local_vars_dump')->defaultTrue()->end()
                         ->scalarNode('max_nesting_depth')->defaultValue(-1)->end()
                         ->scalarNode('max_items')->defaultValue(static::PHP_MAX_ITEMS)->end()
+                        ->booleanNode('log_payload')->defaultFalse()->end()
+                        ->booleanNode('raise_on_error')->defaultFalse()->end()
+                        ->booleanNode('transmit')->defaultTrue()->end()
+                        ->scalarNode('verbose')->defaultValue(static::VERBOSE)->end()
+                        ->scalarNode('minimum_level')->defaultValue(static::MIN_OCCURRENCES_LEVEL)->end()
                     ->end()
                 ->end()
                 ->arrayNode('rollbar_js')->children()
