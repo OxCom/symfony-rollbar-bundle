@@ -6,6 +6,7 @@ use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 use Rollbar\Rollbar as RollbarNotifier;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Kernel;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
 use Rollbar\Payload\Level;
 use SymfonyRollbarBundle\Provider\Api\Filter;
@@ -121,9 +122,13 @@ class RollbarHandler extends AbstractProcessingHandler
         $rConfig  = $config['rollbar'];
 
         // override specific values
+        $root = \method_exists($kernel, 'getProjectDir')
+            ? $kernel->getProjectDir()
+            : $kernel->getRootDir();
+
         $override = [
-            'root'      => $kernel->getRootDir(),
-            'framework' => 'Symfony ' . \Symfony\Component\HttpKernel\Kernel::VERSION,
+            'root'      => $root,
+            'framework' => 'Symfony ' . Kernel::VERSION,
         ];
 
         foreach ($override as $key => $value) {

@@ -46,6 +46,10 @@ class ConfigurationTest extends KernelTestCase
             'key'   => 'value',
         ];
 
+        $root = \method_exists(static::$kernel, 'getProjectDir')
+            ? static::$kernel->getProjectDir()
+            : static::$kernel->getRootDir();
+
         $default = [
             'enable'     => true,
             'exclude'    => $exclude,
@@ -58,7 +62,6 @@ class ConfigurationTest extends KernelTestCase
                 'capture_error_stacktraces'      => true,
                 'check_ignore'                   => '\SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider',
                 'code_version'                   => '',
-                'enable_utf8_sanitization'       => true,
                 'environment'                    => static::$kernel->getEnvironment(),
                 'error_sample_rates'             => $errorRates,
                 'handler'                        => Configuration::HANDLER_BLOCKING,
@@ -68,9 +71,8 @@ class ConfigurationTest extends KernelTestCase
                 'logger'                         => null,
                 'person'                         => [],
                 'person_fn'                      => '\SymfonyRollbarBundle\Tests\Fixtures\PersonProvider',
-                'root'                           => static::$kernel->getRootDir(),
+                'root'                           => $root,
                 'scrub_fields'                   => Configuration::$scrubFieldsDefault,
-                'shift_function'                 => true,
                 'timeout'                        => 3,
                 'report_suppressed'              => false,
                 'use_error_reporting'            => false,
@@ -94,9 +96,13 @@ class ConfigurationTest extends KernelTestCase
                 'custom_truncation'              => null,
                 'ca_cert_path'                   => null,
                 'transformer'                    => null,
-                'verbosity'                      => 'error',
                 'max_nesting_depth'              => -1,
+                'transmit'                       => false,
                 'max_items'                      => Configuration::PHP_MAX_ITEMS,
+                'log_payload'                    => false,
+                'minimum_level'                  => Configuration::MIN_OCCURRENCES_LEVEL,
+                'raise_on_error'                 => false,
+                'verbose'                        => Configuration::VERBOSE,
             ],
             'rollbar_js' => [
                 'access_token'                 => 'SOME_ROLLBAR_ACCESS_TOKEN_654321',
@@ -136,15 +142,24 @@ class ConfigurationTest extends KernelTestCase
         static::bootKernel();
         $container = static::$kernel->getContainer();
 
-        $config     = $container->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
-        $rbConfig   = Config::listOptions();
+        $config       = $container->getParameter(SymfonyRollbarExtension::ALIAS . '.config');
+        $rbConfig     = Config::listOptions();
+        $bundleConfig = \array_keys($config['rollbar']);
 
-        foreach ($rbConfig as $key) {
-            if ($key === 'enabled') {
-                continue;
-            }
+        // add options that are not in list of options for rollbar native config, but they are in use
+        $rbConfig[] = 'ca_cert_path';
+        $rbConfig[] = 'logger';
+        $rbConfig[] = 'transformer';
 
-            $this->assertArrayHasKey($key, $config['rollbar']);
-        }
+        // bundle config does not handle 'enabled' config property
+        $bundleConfig[] = 'enabled';
+        // @TODO: add support of next config property
+        $bundleConfig[] = 'log_payload_logger';
+        $bundleConfig[] = 'verbose_logger';
+
+        asort($rbConfig);
+        asort($bundleConfig);
+
+        $this->assertEquals(\array_values($rbConfig), \array_values($bundleConfig));
     }
 }

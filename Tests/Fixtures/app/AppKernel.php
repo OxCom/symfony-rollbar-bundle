@@ -1,15 +1,17 @@
 <?php
 
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use SymfonyRollbarBundle\SymfonyRollbarBundle;
 
 class AppKernel extends Kernel
 {
     public function registerBundles()
     {
         $bundles = [
-            new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new \SymfonyRollbarBundle\SymfonyRollbarBundle(),
+            new FrameworkBundle(),
+            new SymfonyRollbarBundle(),
         ];
 
         return $bundles;
@@ -21,6 +23,11 @@ class AppKernel extends Kernel
     public function getRootDir()
     {
         return __DIR__;
+    }
+
+    public function getProjectDir()
+    {
+        return $this->getRootDir();
     }
 
     /**

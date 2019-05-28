@@ -2,19 +2,57 @@
 
 namespace SymfonyRollbarBundle\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class DeployCommand
  *
  * @package SymfonyRollbarBundle\Command
  */
-class DeployCommand extends \SymfonyRollbarBundle\Command\AbstractCommand
+class DeployCommand extends Command
 {
     protected static $defaultName = 'rollbar:deploy';
+
+    /**
+     * @var \Symfony\Component\Console\Style\SymfonyStyle
+     */
+    protected $io;
+
+    /**
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    protected $container;
+
+    /**
+     * DeployCommand constructor.
+     *
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
+    {
+        parent::__construct();
+
+        $this->container = $container;
+    }
+
+    /**
+     * Extend the initialize method to add additional parameters to the class.
+     *
+     * {@inheritdoc}
+     */
+    public function initialize(InputInterface $input, OutputInterface $output)
+    {
+        parent::initialize($input, $output);
+
+        $io       = new SymfonyStyle($input, $output);
+        $this->io = $io;
+    }
 
     /**
      * @inheritdoc
@@ -65,9 +103,9 @@ class DeployCommand extends \SymfonyRollbarBundle\Command\AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var \SymfonyRollbarBundle\Provider\RollbarHandler $rbHandler */
-        $rbHandler = $this->getContainer()->get('symfony_rollbar.provider.rollbar_handler');
+        $rbHandler = $this->container->get('symfony_rollbar.provider.rollbar_handler');
 
-        $environment = $this->getContainer()->getParameter('kernel.environment');
+        $environment = $this->container->getParameter('kernel.environment');
         $revision    = $input->getArgument('revision');
         $comment     = $input->getOption('comment');
         $rUser       = $input->getOption('rollbar_username');

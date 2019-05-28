@@ -6,7 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use SymfonyRollbarBundle\DependencyInjection\Configuration;
 use SymfonyRollbarBundle\Provider\RollbarHandler;
 use SymfonyRollbarBundle\Tests\Fixtures\ApiClientMock;
+use SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider;
 use SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException;
+use SymfonyRollbarBundle\Tests\Fixtures\PersonProvider;
 
 /**
  * Class RollbarHandlerTest
@@ -119,7 +121,7 @@ class RollbarHandlerTest extends KernelTestCase
                     'channel'    => 'symfony.rollbar',
                     'extra'      => [],
                     'context'    => [
-                        'payload' => [1, 2, 3]
+                        'payload' => [1, 2, 3],
                     ],
                 ],
             ],
@@ -128,6 +130,7 @@ class RollbarHandlerTest extends KernelTestCase
 
     /**
      * @dataProvider recordGenerator
+     *
      * @param $record
      */
     public function testClose($record)
@@ -192,7 +195,7 @@ class RollbarHandlerTest extends KernelTestCase
             'extra'      => [],
             'context'    => [
                 'exception' => new MyAwesomeException('RecordGenerator :: #4'),
-                'payload' => [4, 5, 6]
+                'payload'   => [4, 5, 6],
             ],
         ];
 
@@ -315,6 +318,10 @@ class RollbarHandlerTest extends KernelTestCase
             'key'   => 'value',
         ];
 
+        $root = \method_exists(static::$kernel, 'getProjectDir')
+            ? static::$kernel->getProjectDir()
+            : static::$kernel->getRootDir();
+
         $default = [
             'access_token'                   => 'SOME_ROLLBAR_ACCESS_TOKEN_123456',
             'agent_log_location'             => static::$kernel->getLogDir() . '/rollbar.log',
@@ -322,12 +329,8 @@ class RollbarHandlerTest extends KernelTestCase
             'branch'                         => Configuration::BRANCH,
             'autodetect_branch'              => false,
             'capture_error_stacktraces'      => true,
-            'check_ignore'                    => [
-                new \SymfonyRollbarBundle\Tests\Fixtures\CheckIgnoreProvider(),
-                'checkIgnore',
-            ],
+            'check_ignore'                   => [new CheckIgnoreProvider(), 'checkIgnore'],
             'code_version'                   => '',
-            'enable_utf8_sanitization'       => true,
             'environment'                    => static::$kernel->getEnvironment(),
             'error_sample_rates'             => $errorRates,
             'handler'                        => Configuration::HANDLER_BLOCKING,
@@ -336,13 +339,9 @@ class RollbarHandlerTest extends KernelTestCase
             'included_errno'                 => $defaultErrorMask,
             'logger'                         => null,
             'person'                         => null,
-            'person_fn'                      => [
-                new \SymfonyRollbarBundle\Tests\Fixtures\PersonProvider($container),
-                'getPerson',
-            ],
-            'root'                           => static::$kernel->getRootDir(),
+            'person_fn'                      => [new PersonProvider($container), 'getPerson'],
+            'root'                           => $root,
             'scrub_fields'                   => Configuration::$scrubFieldsDefault,
-            'shift_function'                 => true,
             'timeout'                        => 3,
             'report_suppressed'              => false,
             'use_error_reporting'            => false,
@@ -366,11 +365,14 @@ class RollbarHandlerTest extends KernelTestCase
             'custom_truncation'              => null,
             'ca_cert_path'                   => null,
             'transformer'                    => null,
-            'verbosity'                      => 'error',
             'framework'                      => 'Symfony ' . \Symfony\Component\HttpKernel\Kernel::VERSION,
             'max_nesting_depth'              => -1,
             'max_items'                      => Configuration::PHP_MAX_ITEMS,
-
+            'log_payload'                    => false,
+            'raise_on_error'                 => false,
+            'transmit'                       => false,
+            'verbose'                        => Configuration::VERBOSE,
+            'minimum_level'                  => Configuration::MIN_OCCURRENCES_LEVEL,
         ];
 
         $this->assertEquals($default, $config);
