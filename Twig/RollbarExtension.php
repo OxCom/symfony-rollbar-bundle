@@ -5,8 +5,10 @@ namespace SymfonyRollbarBundle\Twig;
 use Rollbar\RollbarJsHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use SymfonyRollbarBundle\DependencyInjection\SymfonyRollbarExtension;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class RollbarExtension extends \Twig\Extension\AbstractExtension
+class RollbarExtension extends AbstractExtension
 {
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
@@ -48,7 +50,7 @@ class RollbarExtension extends \Twig\Extension\AbstractExtension
         }
 
         return [
-            new \Twig\TwigFunction('rollbarJs', [$this, 'rollbarJs'], [
+            new TwigFunction('rollbarJs', [$this, 'rollbarJs'], [
                 'is_safe' => ['html'],
             ]),
         ];
