@@ -3,6 +3,7 @@
 namespace SymfonyRollbarBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -38,6 +39,11 @@ class SymfonyRollbarExtension extends Extension
 
         // store parameters for external use
         $container->setParameter(static::ALIAS . '.config', $config);
+
+        $container->setAlias(
+            $container->getParameter('symfony_rollbar.provider.rollbar_handler.class'),
+            new Alias('symfony_rollbar.provider.rollbar_handler', false)
+        );
     }
 
     /**
