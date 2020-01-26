@@ -59,6 +59,11 @@ class ExceptionListener extends AbstractListener
             $exception = new \Exception('Undefined exception');
         }
 
+        if (is_callable($exception)) {
+            $payload = 'callable()';
+            $exception = new \Exception('Undefined exception');
+        }
+
         $this->getLogger()->error($exception->getMessage(), [
             'level'     => \Monolog\Logger::ERROR,
             'exception' => $exception,
