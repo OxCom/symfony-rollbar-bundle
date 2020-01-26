@@ -55,12 +55,12 @@ class ExceptionListener extends AbstractListener
         // @link http://php.net/manual/en/reserved.constants.php
         // @link http://php.net/manual/en/language.errors.php7.php
         if (!$exception instanceof \Exception && !$exception instanceof \Throwable) {
-            $payload   = ['message' => @serialize($exception)];
-            $exception = new \Exception('Undefined exception');
-        }
+            if (is_callable($exception)) {
+                $payload = 'callable()';
+            } else {
+                $payload   = ['message' => @serialize($exception)];
+            }
 
-        if (is_callable($exception)) {
-            $payload = 'callable()';
             $exception = new \Exception('Undefined exception');
         }
 
