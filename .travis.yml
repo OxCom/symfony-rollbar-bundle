@@ -33,7 +33,12 @@ matrix:
         -   php: 7.2
             env: SYMFONY_VERSION=~3.4
         -   php: 7.3
+            env: SYMFONY_VERSION=~3.4
 
+        -   php: 7.4
+            env: SYMFONY_VERSION=~3.4
+
+        -   php: 7.3
             env: SYMFONY_VERSION=~4.0
         -   php: 7.2
             env: SYMFONY_VERSION=~4.0
@@ -46,6 +51,8 @@ matrix:
             env: SYMFONY_VERSION=~4.1
         -   php: 7.3
             env: SYMFONY_VERSION=~4.1
+        -   php: 7.4
+            env: SYMFONY_VERSION=~4.1
 
         -   php: 7.1
             env: SYMFONY_VERSION=~4.2
@@ -53,6 +60,15 @@ matrix:
             env: SYMFONY_VERSION=~4.2
         -   php: 7.3
             env: SYMFONY_VERSION=~4.2
+        -   php: 7.4
+            env: SYMFONY_VERSION=~4.2
+
+        -   php: 7.2
+            env: SYMFONY_VERSION=~4.4
+        -   php: 7.3
+            env: SYMFONY_VERSION=~4.4
+        -   php: 7.4
+            env: SYMFONY_VERSION=~4.4
 
 before_install:
     - curl -s https://getcomposer.org/installer | php

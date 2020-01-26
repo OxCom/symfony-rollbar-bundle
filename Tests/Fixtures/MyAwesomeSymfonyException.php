@@ -2,7 +2,7 @@
 
 namespace SymfonyRollbarBundle\Tests\Fixtures;
 
-class MyAwesomeSymfonyException implements \Symfony\Component\HttpKernel\Exception\HttpException
+class MyAwesomeSymfonyException extends \Symfony\Component\HttpKernel\Exception\HttpException
 {
     /**
      * Returns the status code.
