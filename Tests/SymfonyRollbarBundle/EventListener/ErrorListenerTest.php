@@ -145,14 +145,21 @@ class ErrorListenerTest extends KernelTestCase
         $mock->method('getLastError')
             ->willReturn($error);
 
-        $mock->expects($called ? $this->once() : $this->never())
-            ->method('handleError')
-            ->with(
-                $this->equalTo($error['type']),
-                $this->stringContains($error['message']),
-                $this->stringContains($error['file']),
-                $this->equalTo($error['line'])
-            );
+        if ($called) {
+            $mock
+                ->expects($this->once())
+                ->method('handleError')
+                ->with(
+                    $this->equalTo($error['type']),
+                    $this->stringContains($error['message']),
+                    $this->stringContains($error['file']),
+                    $this->equalTo($error['line'])
+                );
+        } else {
+            $mock
+                ->expects($this->never())
+                ->method('handleError');
+        }
 
         /**
          * @var ErrorListener $mock

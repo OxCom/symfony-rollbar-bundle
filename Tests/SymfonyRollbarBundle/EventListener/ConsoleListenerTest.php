@@ -65,10 +65,11 @@ class ConsoleListenerTest extends KernelTestCase
             $this->assertNotEmpty($record['context']['exception']);
             $exception = $record['context']['exception'];
 
+            $this->assertInstanceOf(\Exception::class, $exception);
+
             $this->assertEquals($error->getMessage(), $record['message']);
             $this->assertEquals(Logger::ERROR, $record['level']);
 
-            $this->assertInstanceOf(\Exception::class, $exception);
         });
 
         foreach ($eventDispatcher->getListeners($key) as $listener) {
