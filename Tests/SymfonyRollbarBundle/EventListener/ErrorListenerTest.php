@@ -91,28 +91,33 @@ class ErrorListenerTest extends KernelTestCase
         $handler         = ErrorHandler::getInstance();
         $rbHandler       = new RollbarHandler($container);
 
-        $handler->setAssert(function (array $record) use ($rbHandler) {
-            try {
-                $exception = $record['context']['exception'];
+        if (version_compare(PHP_VERSION, '7.0.0')  >= 0) {
+            $this->expectException('Error');
+            $this->expectExceptionMessage('Call to undefined function this_is_fatal_error()');
+        } else {
+            $handler->setAssert(function (array $record) use ($rbHandler) {
+                try {
+                    $exception = $record['context']['exception'];
 
-                if ($rbHandler->shouldSkip($exception)) {
-                    return;
+                    if ($rbHandler->shouldSkip($exception)) {
+                        return;
+                    }
+
+                    $this->assertNotEmpty($record);
+
+                    $this->assertEquals('Call to undefined function this_is_fatal_error()', $record['message'], '');
+                    $this->assertEquals(Logger::ERROR, $record['level']);
+                    $this->assertNotEmpty($record['context']['exception']);
+                    $this->assertInstanceOf(ErrorWrapper::class, $exception);
+                    restore_error_handler();
+                } catch (\Exception $e) {
+                    echo implode("\n", [
+                        $e->getMessage(),
+                        $e->getTraceAsString()
+                    ]);
                 }
-
-                $this->assertNotEmpty($record);
-
-                $this->assertEquals('Call to undefined function this_is_fatal_error()', $record['message'], '');
-                $this->assertEquals(Logger::ERROR, $record['level']);
-                $this->assertNotEmpty($record['context']['exception']);
-                $this->assertInstanceOf(ErrorWrapper::class, $exception);
-                restore_error_handler();
-            } catch (\Exception $e) {
-                echo implode("\n", [
-                    $e->getMessage(),
-                    $e->getTraceAsString()
-                ]);
-            }
-        });
+            });
+        }
 
         foreach ($listeners as $listener) {
             /**
@@ -123,11 +128,6 @@ class ErrorListenerTest extends KernelTestCase
             }
 
             $listener[0]->getLogger()->setHandlers([$handler]);
-        }
-
-        if (version_compare(PHP_VERSION, '7.0.0')  >= 0) {
-            $this->expectException('Error');
-            $this->expectExceptionMessage('Call to undefined function this_is_fatal_error()');
         }
 
         @include __DIR__ . '/../../Fixtures/fatal.php';
