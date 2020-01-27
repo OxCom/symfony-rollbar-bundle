@@ -35,6 +35,9 @@ class ConsoleListenerTest extends KernelTestCase
         static::bootKernel();
         $container = static::$kernel->getContainer();
 
+        $erHandler = set_error_handler('var_dump');
+        restore_error_handler();
+
         $input  = new ArrayInput([]);
         $output = new StreamOutput(
             fopen('php://memory', 'w', false),
@@ -104,6 +107,7 @@ class ConsoleListenerTest extends KernelTestCase
         }
 
         $eventDispatcher->dispatch($key, $event);
-        restore_error_handler();
+        set_error_handler($erHandler);
+        static::ensureKernelShutdown();
     }
 }

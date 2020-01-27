@@ -27,7 +27,7 @@ class ErrorListenerTest extends KernelTestCase
             $_SERVER['argv'] = [
                 './vendor/bin/phpunit',
                 '-c',
-                'Tests/phpunit.xml.dist',
+                'phpunit.xml',
             ];
         }
 
@@ -36,6 +36,9 @@ class ErrorListenerTest extends KernelTestCase
 
     public function testUserError()
     {
+        $erHandler = set_error_handler('var_dump');
+        restore_error_handler();
+
         $message = "Fatal error - " . time();
         $container = static::$kernel->getContainer();
 
@@ -69,7 +72,8 @@ class ErrorListenerTest extends KernelTestCase
         }
 
         trigger_error($message, E_USER_ERROR);
-        restore_error_handler();
+        set_error_handler($erHandler);
+        static::ensureKernelShutdown();
     }
 
     /**
