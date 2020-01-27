@@ -99,6 +99,7 @@ class ErrorListenerTest extends KernelTestCase
             $this->expectExceptionMessage('Call to undefined function this_is_fatal_error()');
         } else {
             $handler->setAssert(function (array $record) use ($rbHandler) {
+                restore_error_handler();
                 try {
                     $exception = $record['context']['exception'];
 
@@ -112,13 +113,13 @@ class ErrorListenerTest extends KernelTestCase
                     $this->assertEquals(Logger::ERROR, $record['level']);
                     $this->assertNotEmpty($record['context']['exception']);
                     $this->assertInstanceOf(ErrorWrapper::class, $exception);
-                    restore_error_handler();
                 } catch (\Exception $e) {
                     echo implode("\n", [
                         $e->getMessage(),
                         $e->getTraceAsString()
                     ]);
                 }
+
             });
         }
 

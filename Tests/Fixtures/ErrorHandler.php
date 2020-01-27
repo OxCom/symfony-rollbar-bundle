@@ -52,6 +52,8 @@ class ErrorHandler extends AbstractProcessingHandler
             $cb = $this->assert;
 
             $cb($record);
+
+            $this->assert = null;
         }
     }
 }
