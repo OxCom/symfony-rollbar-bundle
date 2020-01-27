@@ -30,7 +30,7 @@ class ExceptionListenerTest extends KernelTestCase
             $_SERVER['argv'] = [
                 './vendor/bin/phpunit',
                 '-c',
-                'Tests/phpunit.xml.dist',
+                'phpunit.xml',
             ];
         }
 

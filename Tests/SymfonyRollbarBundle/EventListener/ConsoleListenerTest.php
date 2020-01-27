@@ -60,8 +60,7 @@ class ConsoleListenerTest extends KernelTestCase
 
         $handler = new ErrorHandler();
         $handler->setAssert(function ($record) {
-            // only travis has this error ...
-            var_dump($record, debug_backtrace());
+            var_dump($record['context']['exception']);
             $this->assertNotEmpty($record);
 
             $this->assertNotEmpty($record['context']['exception']);
