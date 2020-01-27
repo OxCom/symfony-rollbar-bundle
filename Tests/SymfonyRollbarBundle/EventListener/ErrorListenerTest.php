@@ -14,7 +14,6 @@ use SymfonyRollbarBundle\Tests\Fixtures\ErrorHandler;
 /**
  * Class ErrorListenerTest
  * @package SymfonyRollbarBundle\Tests\EventListener
- * @runTestsInSeparateProcesses
  */
 class ErrorListenerTest extends KernelTestCase
 {
@@ -77,6 +76,7 @@ class ErrorListenerTest extends KernelTestCase
     }
 
     /**
+     * @runInSeparateProcess
      * @covers \SymfonyRollbarBundle\EventListener\ErrorListener
      */
     public function testFatalError()
