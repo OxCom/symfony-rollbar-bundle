@@ -123,10 +123,9 @@ class ErrorListenerTest extends KernelTestCase
         }
 
         foreach ($listeners as $listener) {
-            /**
-             * @var AbstractListener $listener
-             */
-            if (!$listener[0] instanceof AbstractListener) {
+            if (!$listener[0] instanceof AbstractListener || $listener[0] instanceof ErrorListener) {
+                // disable default symfony listeners and current error listener
+                $eventDispatcher->removeListener($listener[1], $listener);
                 continue;
             }
 
