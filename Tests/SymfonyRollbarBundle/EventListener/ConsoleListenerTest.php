@@ -84,7 +84,11 @@ class ConsoleListenerTest extends KernelTestCase
             $listener[0]->getLogger()->setHandlers([$handler]);
         }
 
-        $eventDispatcher->dispatch($key, $event);
+        if (class_exists('Symfony\Component\Console\Event\ConsoleExceptionEvent')) {
+            $eventDispatcher->dispatch($event);
+        } else {
+            $eventDispatcher->dispatch($key, $event);
+        }
         restore_error_handler();
     }
 
