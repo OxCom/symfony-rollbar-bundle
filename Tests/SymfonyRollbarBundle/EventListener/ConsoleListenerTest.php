@@ -23,26 +23,41 @@ use SymfonyRollbarBundle\Tests\Fixtures\ErrorHandler;
  */
 class ConsoleListenerTest extends KernelTestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-        static::bootKernel();
-    }
-
     /**
-     * @dataProvider provideLegacyEvents
      * @covers       \SymfonyRollbarBundle\EventListener\ExceptionListener::onConsoleError
-     *
-     * @param $error
-     * @param $event
      */
-    public function testLegacyConsoleException($error, $event)
+    public function testLegacyConsoleException()
     {
         if (version_compare(PHP_VERSION, '7.4.0') >= 0) {
             $this->markTestIncomplete("PHP7.4 - travis: Serialization of 'ReflectionClass' is not allowed");
         }
 
+        static::bootKernel();
         $container = static::$kernel->getContainer();
+
+        $input  = new ArrayInput([]);
+        $output = new StreamOutput(
+            fopen('php://memory', 'w', false),
+            OutputInterface::VERBOSITY_QUIET,
+            false
+        );
+
+        $error     = new \Exception('This is console exception');
+        $command   = new DeployCommand($container);
+
+        if (class_exists('Symfony\Component\Console\ConsoleEvents')) {
+            if (class_exists('Symfony\Component\Console\Event\ConsoleErrorEvent')) {
+                $event = new ConsoleErrorEvent($input, $output, $error, $command);
+            }
+
+            if (class_exists('\Symfony\Component\Console\Event\ConsoleExceptionEvent')) {
+                $event = new ConsoleExceptionEvent($command, $input, $output, $error, 1);
+            }
+        }
+
+        if (empty($event)) {
+            $this->markTestSkipped('No event defined.');
+        }
 
         /**
          * @var TraceableEventDispatcher $eventDispatcher
@@ -90,37 +105,5 @@ class ConsoleListenerTest extends KernelTestCase
 
         $eventDispatcher->dispatch($key, $event);
         restore_error_handler();
-    }
-
-    /**
-     * @return array
-     */
-    public function provideLegacyEvents()
-    {
-        $input  = new ArrayInput([]);
-        $output = new StreamOutput(
-            fopen('php://memory', 'w', false),
-            OutputInterface::VERBOSITY_QUIET,
-            false
-        );
-
-        static::bootKernel();
-        $container = static::$kernel->getContainer();
-        $error     = new \Exception('This is console exception');
-        $command   = new DeployCommand($container);
-
-        $events = [];
-
-        if (class_exists('Symfony\Component\Console\ConsoleEvents')) {
-            if (class_exists('Symfony\Component\Console\Event\ConsoleErrorEvent')) {
-                $events[] = [$error, new ConsoleErrorEvent($input, $output, $error, $command)];
-            }
-
-            if (class_exists('\Symfony\Component\Console\Event\ConsoleExceptionEvent')) {
-                $events[] = [$error, new ConsoleExceptionEvent($command, $input, $output, $error, 1)];
-            }
-        }
-
-        return $events;
     }
 }
