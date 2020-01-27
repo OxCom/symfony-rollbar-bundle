@@ -37,12 +37,9 @@ class ExceptionListenerTest extends KernelTestCase
         static::bootKernel();
     }
 
-    /**
-     * @dataProvider generateEventExceptions
-     * @param \Exception $expected
-     */
-    public function testException($expected)
+    public function testException()
     {
+        $expected = new \Exception('This is new exception');
         $container = static::$kernel->getContainer();
 
         /**
@@ -89,14 +86,6 @@ class ExceptionListenerTest extends KernelTestCase
 
         $eventDispatcher->dispatch('kernel.exception', $event);
         restore_error_handler();
-    }
-
-    public function generateEventExceptions()
-    {
-        return [
-            [new \Exception('This is new exception')],
-            [new \Exception('This is one more new exception')],
-        ];
     }
 
     /**
