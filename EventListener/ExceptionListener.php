@@ -57,6 +57,8 @@ class ExceptionListener extends AbstractListener
         if (!$exception instanceof \Exception && !$exception instanceof \Throwable) {
             if (is_callable($exception)) {
                 $payload = ['message' => '{closure}'];
+            } elseif ($exception instanceof \ReflectionClass) {
+                $payload = ['message' => '{reflection}'];
             } else {
                 $payload = ['message' => @serialize($exception)];
             }

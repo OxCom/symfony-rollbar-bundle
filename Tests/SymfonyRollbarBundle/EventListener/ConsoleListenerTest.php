@@ -60,7 +60,6 @@ class ConsoleListenerTest extends KernelTestCase
 
         $handler = new ErrorHandler();
         $handler->setAssert(function ($record) {
-            var_dump($record['context']['exception']);
             $this->assertNotEmpty($record);
 
             $this->assertNotEmpty($record['context']['exception']);
