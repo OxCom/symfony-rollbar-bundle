@@ -33,6 +33,9 @@ class ErrorListenerTest extends KernelTestCase
         static::bootKernel();
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testUserError()
     {
         $erHandler = set_error_handler('var_dump');
