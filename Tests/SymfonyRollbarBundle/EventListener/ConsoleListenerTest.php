@@ -67,7 +67,7 @@ class ConsoleListenerTest extends KernelTestCase
 
             $this->assertInstanceOf(\Exception::class, $exception);
 
-            $this->assertEquals($error->getMessage(), $record['message']);
+            $this->assertEquals($error->getMessage(), $record['message'], @\json_encode($record));
             $this->assertEquals(Logger::ERROR, $record['level']);
         });
 
@@ -84,11 +84,7 @@ class ConsoleListenerTest extends KernelTestCase
             $listener[0]->getLogger()->setHandlers([$handler]);
         }
 
-        if (class_exists('Symfony\Component\Console\Event\ConsoleExceptionEvent')) {
-            $eventDispatcher->dispatch($event);
-        } else {
-            $eventDispatcher->dispatch($key, $event);
-        }
+        $eventDispatcher->dispatch($key, $event);
         restore_error_handler();
     }
 
