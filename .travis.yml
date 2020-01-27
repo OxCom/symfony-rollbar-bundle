@@ -80,7 +80,7 @@ script:
     - cat composer.json | grep symfony\/symfony
     - php -v
     - ./vendor/bin/phpcs --standard=psr2 DependencyInjection/ EventListener/ Provider/ Tests/SymfonyRollbarBundle
-    - ./vendor/bin/phpunit -c phpunit.xml
+    - ./vendor/bin/phpunit
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)

@@ -50,7 +50,7 @@
         "test": [
             "composer install",
             "./vendor/bin/phpcs --standard=psr2 DependencyInjection/ EventListener/ Provider/ Tests/SymfonyRollbarBundle",
-            "./vendor/bin/phpunit -c phpunit.xml"
+            "./vendor/bin/phpunit"
         ]
     }
 }
