@@ -58,18 +58,26 @@ class ConsoleListenerTest extends KernelTestCase
             $eventDispatcher->removeListener('kernel.exception', $listener);
         }
 
-        $handler = new ErrorHandler();
-        $handler->setAssert(function ($record) use ($error) {
-            $this->assertNotEmpty($record);
+        $handler = $this->getMockBuilder(ErrorHandler::class)
+            ->setMethods(['write'])
+            ->getMock();
 
-            $this->assertNotEmpty($record['context']['exception']);
-            $exception = $record['context']['exception'];
+        $handler
+            ->expects($this->once())
+            ->method('write')
+            ->willReturnCallback(function($record) use ($error) {
+                $this->assertNotEmpty($record);
 
-            $this->assertInstanceOf(\Exception::class, $exception);
+                $this->assertNotEmpty($record['context']['exception']);
+                $exception = $record['context']['exception'];
 
-            $this->assertEquals($error->getMessage(), $record['message'], @\json_encode($record));
-            $this->assertEquals(Logger::ERROR, $record['level']);
-        });
+                $this->assertInstanceOf(\Exception::class, $exception);
+
+                $this->assertEquals($error->getMessage(), $record['message']);
+                $this->assertEquals(Logger::ERROR, $record['level']);
+
+                return;
+            });
 
         foreach ($eventDispatcher->getListeners($key) as $listener) {
             /**
