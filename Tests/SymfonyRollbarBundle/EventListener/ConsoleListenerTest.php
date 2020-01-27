@@ -65,7 +65,7 @@ class ConsoleListenerTest extends KernelTestCase
         $handler
             ->expects($this->once())
             ->method('write')
-            ->willReturnCallback(function($record) use ($error) {
+            ->willReturnCallback(function ($record) use ($error) {
                 $this->assertNotEmpty($record);
 
                 $this->assertNotEmpty($record['context']['exception']);
@@ -75,8 +75,6 @@ class ConsoleListenerTest extends KernelTestCase
 
                 $this->assertEquals($error->getMessage(), $record['message']);
                 $this->assertEquals(Logger::ERROR, $record['level']);
-
-                return;
             });
 
         foreach ($eventDispatcher->getListeners($key) as $listener) {
