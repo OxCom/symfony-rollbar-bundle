@@ -17,22 +17,12 @@ use SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException;
 /**
  * Class ExceptionListenerTest
  * @package SymfonyRollbarBundle\Tests\EventListener
- * @runTestsInSeparateProcesses
  */
 class ExceptionListenerTest extends KernelTestCase
 {
     public function setUp()
     {
         parent::setUp();
-
-        // hack for Symfony 2.8 and ERRORS
-        if (2 === Kernel::MAJOR_VERSION && Kernel::MINOR_VERSION >= 8) {
-            $_SERVER['argv'] = [
-                './vendor/bin/phpunit',
-                '-c',
-                'phpunit.xml',
-            ];
-        }
 
         static::bootKernel();
     }
