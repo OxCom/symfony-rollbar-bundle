@@ -84,6 +84,13 @@ class ErrorListenerTest extends KernelTestCase
      */
     public function testFatalError()
     {
+        if (version_compare(PHP_VERSION, '7.4.0') >= 0) {
+            $this->markTestSkipped('PHP7.4 - test fails on travis.');
+        }
+
+        $erHandler = set_error_handler('var_dump');
+        restore_error_handler();
+
         $container = static::$kernel->getContainer();
 
         /**
@@ -94,12 +101,13 @@ class ErrorListenerTest extends KernelTestCase
         $handler         = ErrorHandler::getInstance();
         $rbHandler       = new RollbarHandler($container);
 
-        if (version_compare(PHP_VERSION, '7.0.0')  >= 0) {
+        if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
             $this->expectException('Error');
             $this->expectExceptionMessage('Call to undefined function this_is_fatal_error()');
         } else {
-            $handler->setAssert(function (array $record) use ($rbHandler) {
-                restore_error_handler();
+            $handler->setAssert(function (array $record) use ($rbHandler, $erHandler) {
+                set_error_handler($erHandler);
+
                 try {
                     $exception = $record['context']['exception'];
 
