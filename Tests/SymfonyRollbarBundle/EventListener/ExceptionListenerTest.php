@@ -145,6 +145,7 @@ class ExceptionListenerTest extends KernelTestCase
             if (!$listener[0] instanceof AbstractListener) {
                 // disable default symfony listeners
                 $eventDispatcher->removeListener('kernel.exception', $listener);
+                $eventDispatcher->removeListener($listener[1], $listener);
                 continue;
             }
 
@@ -154,6 +155,7 @@ class ExceptionListenerTest extends KernelTestCase
         $eventDispatcher->dispatch('kernel.exception', $event);
         $this->assertTrue(true); // trick to mark not risky
         restore_error_handler();
+        $handler->setAssert(null);
     }
 
     /**
