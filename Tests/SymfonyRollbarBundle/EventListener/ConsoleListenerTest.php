@@ -28,10 +28,6 @@ class ConsoleListenerTest extends KernelTestCase
      */
     public function testLegacyConsoleException()
     {
-        if (version_compare(PHP_VERSION, '7.4.0') >= 0) {
-            $this->markTestIncomplete("PHP7.4 - travis: Serialization of 'ReflectionClass' is not allowed");
-        }
-
         static::bootKernel();
         $container = static::$kernel->getContainer();
 
