@@ -17,7 +17,6 @@ use SymfonyRollbarBundle\Tests\Fixtures\MyAwesomeException;
 /**
  * Class ExceptionListenerTest
  * @package SymfonyRollbarBundle\Tests\EventListener
- * @runTestsInSeparateProcesses
  */
 class ExceptionListenerTest extends KernelTestCase
 {
@@ -25,24 +24,12 @@ class ExceptionListenerTest extends KernelTestCase
     {
         parent::setUp();
 
-        // hack for Symfony 2.8 and ERRORS
-        if (2 === Kernel::MAJOR_VERSION && Kernel::MINOR_VERSION >= 8) {
-            $_SERVER['argv'] = [
-                './vendor/bin/phpunit',
-                '-c',
-                'Tests/phpunit.xml.dist',
-            ];
-        }
-
         static::bootKernel();
     }
 
-    /**
-     * @dataProvider generateEventExceptions
-     * @param \Exception $expected
-     */
-    public function testException($expected)
+    public function testException()
     {
+        $expected = new \Exception('This is new exception');
         $container = static::$kernel->getContainer();
 
         /**
@@ -89,14 +76,6 @@ class ExceptionListenerTest extends KernelTestCase
 
         $eventDispatcher->dispatch('kernel.exception', $event);
         restore_error_handler();
-    }
-
-    public function generateEventExceptions()
-    {
-        return [
-            [new \Exception('This is new exception')],
-            [new \Exception('This is one more new exception')],
-        ];
     }
 
     /**
@@ -166,6 +145,7 @@ class ExceptionListenerTest extends KernelTestCase
             if (!$listener[0] instanceof AbstractListener) {
                 // disable default symfony listeners
                 $eventDispatcher->removeListener('kernel.exception', $listener);
+                $eventDispatcher->removeListener($listener[1], $listener);
                 continue;
             }
 
@@ -175,6 +155,7 @@ class ExceptionListenerTest extends KernelTestCase
         $eventDispatcher->dispatch('kernel.exception', $event);
         $this->assertTrue(true); // trick to mark not risky
         restore_error_handler();
+        $handler->setAssert(null);
     }
 
     /**

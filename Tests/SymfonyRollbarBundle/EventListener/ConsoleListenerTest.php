@@ -23,22 +23,40 @@ use SymfonyRollbarBundle\Tests\Fixtures\ErrorHandler;
  */
 class ConsoleListenerTest extends KernelTestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-        static::bootKernel();
-    }
-
     /**
-     * @dataProvider provideLegacyEvents
      * @covers       \SymfonyRollbarBundle\EventListener\ExceptionListener::onConsoleError
-     *
-     * @param $error
-     * @param $event
      */
-    public function testLegacyConsoleException($error, $event)
+    public function testLegacyConsoleException()
     {
+        static::bootKernel();
         $container = static::$kernel->getContainer();
+
+        $erHandler = set_error_handler('var_dump');
+        restore_error_handler();
+
+        $input  = new ArrayInput([]);
+        $output = new StreamOutput(
+            fopen('php://memory', 'w', false),
+            OutputInterface::VERBOSITY_QUIET,
+            false
+        );
+
+        $error     = new \Exception('This is console exception');
+        $command   = new DeployCommand($container);
+
+        if (class_exists('Symfony\Component\Console\ConsoleEvents')) {
+            if (class_exists('Symfony\Component\Console\Event\ConsoleErrorEvent')) {
+                $event = new ConsoleErrorEvent($input, $output, $error, $command);
+            }
+
+            if (class_exists('\Symfony\Component\Console\Event\ConsoleExceptionEvent')) {
+                $event = new ConsoleExceptionEvent($command, $input, $output, $error, 1);
+            }
+        }
+
+        if (empty($event)) {
+            $this->markTestSkipped('No event defined.');
+        }
 
         /**
          * @var TraceableEventDispatcher $eventDispatcher
@@ -59,16 +77,16 @@ class ConsoleListenerTest extends KernelTestCase
         }
 
         $handler = new ErrorHandler();
-        $handler->setAssert(function ($record) use ($error) {
+        $handler->setAssert(function ($record) {
             $this->assertNotEmpty($record);
 
             $this->assertNotEmpty($record['context']['exception']);
             $exception = $record['context']['exception'];
 
-            $this->assertEquals($error->getMessage(), $record['message']);
-            $this->assertEquals(Logger::ERROR, $record['level']);
-
             $this->assertInstanceOf(\Exception::class, $exception);
+
+            $this->assertEquals('This is console exception', $record['message']);
+            $this->assertEquals(Logger::ERROR, $record['level']);
         });
 
         foreach ($eventDispatcher->getListeners($key) as $listener) {
@@ -85,38 +103,7 @@ class ConsoleListenerTest extends KernelTestCase
         }
 
         $eventDispatcher->dispatch($key, $event);
-        restore_error_handler();
-    }
-
-    /**
-     * @return array
-     */
-    public function provideLegacyEvents()
-    {
-        $input  = new ArrayInput([]);
-        $output = new StreamOutput(
-            fopen('php://memory', 'w', false),
-            OutputInterface::VERBOSITY_QUIET,
-            false
-        );
-
-        static::bootKernel();
-        $container = static::$kernel->getContainer();
-        $error     = new \Exception('This is console exception');
-        $command   = new DeployCommand($container);
-
-        $events = [];
-
-        if (class_exists('Symfony\Component\Console\ConsoleEvents')) {
-            if (class_exists('Symfony\Component\Console\Event\ConsoleErrorEvent')) {
-                $events[] = [$error, new ConsoleErrorEvent($input, $output, $error, $command)];
-            }
-
-            if (class_exists('\Symfony\Component\Console\Event\ConsoleExceptionEvent')) {
-                $events[] = [$error, new ConsoleExceptionEvent($command, $input, $output, $error, 1)];
-            }
-        }
-
-        return $events;
+        set_error_handler($erHandler);
+        static::ensureKernelShutdown();
     }
 }

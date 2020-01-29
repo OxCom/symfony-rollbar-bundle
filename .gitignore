@@ -2,6 +2,5 @@
 /coverage/
 /vendor/
 
-phpunit.xml
 composer.lock
 clover.xml
